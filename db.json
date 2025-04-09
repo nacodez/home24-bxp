@@ -1,0 +1,1716 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Furniture"
+    },
+    {
+      "id": 2,
+      "name": "Living Room",
+      "parent_id": 1
+    },
+    {
+      "id": 3,
+      "name": "Bedroom",
+      "parent_id": 1
+    },
+    {
+      "id": 4,
+      "name": "Kitchen & Dining",
+      "parent_id": 1
+    },
+    {
+      "id": 5,
+      "name": "Office",
+      "parent_id": 1
+    },
+    {
+      "id": 6,
+      "name": "Sofas",
+      "parent_id": 2
+    },
+    {
+      "id": 7,
+      "name": "Coffee Tables",
+      "parent_id": 2
+    },
+    {
+      "id": 8,
+      "name": "TV Stands",
+      "parent_id": 2
+    },
+    {
+      "id": 9,
+      "name": "Beds",
+      "parent_id": 3
+    },
+    {
+      "id": 10,
+      "name": "Wardrobes",
+      "parent_id": 3
+    },
+    {
+      "id": 11,
+      "name": "Mattresses",
+      "parent_id": 3
+    },
+    {
+      "id": 12,
+      "name": "Dining Tables",
+      "parent_id": 4
+    },
+    {
+      "id": 13,
+      "name": "Dining Chairs",
+      "parent_id": 4
+    },
+    {
+      "id": 14,
+      "name": "Desks",
+      "parent_id": 5
+    },
+    {
+      "id": 15,
+      "name": "Office Chairs",
+      "parent_id": 5
+    },
+    {
+      "id": 16,
+      "name": "Lighting"
+    },
+    {
+      "id": 17,
+      "name": "Floor Lamps",
+      "parent_id": 16
+    },
+    {
+      "id": 18,
+      "name": "Table Lamps",
+      "parent_id": 16
+    },
+    {
+      "id": 19,
+      "name": "Ceiling Lights",
+      "parent_id": 16
+    },
+    {
+      "id": 20,
+      "name": "Outdoor"
+    },
+    {
+      "id": 21,
+      "name": "Garden Furniture",
+      "parent_id": 20
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Comfortable Sofa",
+      "category_id": 6,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Gray",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Fabric",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 220,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 95,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 85,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "convertible",
+          "value": true,
+          "type": "boolean",
+          "label": "Convertible"
+        },
+        {
+          "code": "tags",
+          "value": ["modern", "comfortable", "spacious"],
+          "type": "tags",
+          "label": "Tags"
+        }
+      ],
+      "last_modified": "2025-04-05T10:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Modern Coffee Table",
+      "category_id": 7,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Walnut",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 120,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 60,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 45,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "assembly_required",
+          "value": true,
+          "type": "boolean",
+          "label": "Assembly Required"
+        },
+        {
+          "code": "product_url",
+          "value": "https://example.com/coffee-table",
+          "type": "url",
+          "label": "Product URL"
+        }
+      ],
+      "last_modified": "2025-04-04T15:20:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "LED TV Stand",
+      "category_id": 8,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Glass",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 160,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 40,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 50,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "max_tv_size",
+          "value": 65,
+          "type": "number",
+          "label": "Max TV Size (inches)"
+        },
+        {
+          "code": "led_lighting",
+          "value": true,
+          "type": "boolean",
+          "label": "LED Lighting"
+        }
+      ],
+      "last_modified": "2025-04-03T09:15:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "King Size Bed",
+      "category_id": 9,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Oak",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Solid Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 180,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "length",
+          "value": 200,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "storage",
+          "value": true,
+          "type": "boolean",
+          "label": "Under-bed Storage"
+        },
+        {
+          "code": "tags",
+          "value": ["king size", "wooden", "classic"],
+          "type": "tags",
+          "label": "Tags"
+        }
+      ],
+      "last_modified": "2025-04-02T14:40:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Sliding Door Wardrobe",
+      "category_id": 10,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Particle Board with Melamine Finish",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 200,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 60,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 220,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "mirrored",
+          "value": true,
+          "type": "boolean",
+          "label": "Mirrored Doors"
+        }
+      ],
+      "last_modified": "2025-04-01T11:10:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Memory Foam Mattress",
+      "category_id": 11,
+      "attributes": [
+        {
+          "code": "size",
+          "value": "Queen",
+          "type": "text",
+          "label": "Size"
+        },
+        {
+          "code": "thickness",
+          "value": 25,
+          "type": "number",
+          "label": "Thickness (cm)"
+        },
+        {
+          "code": "firmness",
+          "value": "Medium",
+          "type": "text",
+          "label": "Firmness"
+        },
+        {
+          "code": "hypoallergenic",
+          "value": true,
+          "type": "boolean",
+          "label": "Hypoallergenic"
+        },
+        {
+          "code": "warranty_url",
+          "value": "https://example.com/mattress-warranty",
+          "type": "url",
+          "label": "Warranty Information"
+        },
+        {
+          "code": "features",
+          "value": ["memory foam", "cooling gel", "pressure relief"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-31T16:25:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Extendable Dining Table",
+      "category_id": 12,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White and Oak",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "MDF with Oak Veneer",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "min_width",
+          "value": 160,
+          "type": "number",
+          "label": "Minimum Width (cm)"
+        },
+        {
+          "code": "max_width",
+          "value": 200,
+          "type": "number",
+          "label": "Maximum Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 90,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 75,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "extendable",
+          "value": true,
+          "type": "boolean",
+          "label": "Extendable"
+        },
+        {
+          "code": "seats",
+          "value": "6-8",
+          "type": "text",
+          "label": "Seats"
+        }
+      ],
+      "last_modified": "2025-03-30T10:50:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Upholstered Dining Chair",
+      "category_id": 13,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Light Gray",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material_seat",
+          "value": "Fabric",
+          "type": "text",
+          "label": "Seat Material"
+        },
+        {
+          "code": "material_legs",
+          "value": "Solid Oak",
+          "type": "text",
+          "label": "Legs Material"
+        },
+        {
+          "code": "width",
+          "value": 48,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 55,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 85,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "stackable",
+          "value": false,
+          "type": "boolean",
+          "label": "Stackable"
+        }
+      ],
+      "last_modified": "2025-03-29T13:15:00.000Z"
+    },
+    {
+      "id": 9,
+      "name": "Computer Desk",
+      "category_id": 14,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 120,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 60,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 75,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "keyboard_tray",
+          "value": true,
+          "type": "boolean",
+          "label": "Keyboard Tray"
+        },
+        {
+          "code": "features",
+          "value": ["cable management", "ergonomic", "sturdy"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-28T09:45:00.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Ergonomic Office Chair",
+      "category_id": 15,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Mesh and Plastic",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 65,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 65,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": "110-120",
+          "type": "text",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "manual_url",
+          "value": "https://example.com/chair-manual",
+          "type": "url",
+          "label": "User Manual"
+        }
+      ],
+      "last_modified": "2025-03-27T14:30:00.000Z"
+    },
+    {
+      "id": 11,
+      "name": "Adjustable Floor Lamp",
+      "category_id": 17,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Brass",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "height",
+          "value": 150,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "bulb_type",
+          "value": "E27",
+          "type": "text",
+          "label": "Bulb Type"
+        },
+        {
+          "code": "dimmable",
+          "value": true,
+          "type": "boolean",
+          "label": "Dimmable"
+        },
+        {
+          "code": "energy_class",
+          "value": "A++",
+          "type": "text",
+          "label": "Energy Class"
+        }
+      ],
+      "last_modified": "2025-03-26T11:20:00.000Z"
+    },
+    {
+      "id": 12,
+      "name": "Modern Table Lamp",
+      "category_id": 18,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Ceramic and Fabric",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "height",
+          "value": 45,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "diameter",
+          "value": 30,
+          "type": "number",
+          "label": "Shade Diameter (cm)"
+        },
+        {
+          "code": "bulb_type",
+          "value": "E14",
+          "type": "text",
+          "label": "Bulb Type"
+        },
+        {
+          "code": "touch_control",
+          "value": true,
+          "type": "boolean",
+          "label": "Touch Control"
+        }
+      ],
+      "last_modified": "2025-03-25T16:05:00.000Z"
+    },
+    {
+      "id": 13,
+      "name": "Ceiling Chandelier",
+      "category_id": 19,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Crystal and Chrome",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Crystal",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "diameter",
+          "value": 60,
+          "type": "number",
+          "label": "Diameter (cm)"
+        },
+        {
+          "code": "height",
+          "value": 40,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "bulbs_number",
+          "value": 8,
+          "type": "number",
+          "label": "Number of Bulbs"
+        },
+        {
+          "code": "dimmable",
+          "value": true,
+          "type": "boolean",
+          "label": "Dimmable"
+        },
+        {
+          "code": "style",
+          "value": ["luxury", "elegant", "crystal"],
+          "type": "tags",
+          "label": "Style"
+        }
+      ],
+      "last_modified": "2025-03-24T09:30:00.000Z"
+    },
+    {
+      "id": 14,
+      "name": "Garden Dining Set",
+      "category_id": 21,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Graphite",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Polyrattan",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "pieces",
+          "value": 7,
+          "type": "number",
+          "label": "Number of Pieces"
+        },
+        {
+          "code": "table_dimensions",
+          "value": "150x90x75 cm",
+          "type": "text",
+          "label": "Table Dimensions"
+        },
+        {
+          "code": "weather_resistant",
+          "value": true,
+          "type": "boolean",
+          "label": "Weather Resistant"
+        },
+        {
+          "code": "assembly_required",
+          "value": true,
+          "type": "boolean",
+          "label": "Assembly Required"
+        },
+        {
+          "code": "includes",
+          "value": ["table", "6 chairs", "cushions"],
+          "type": "tags",
+          "label": "Includes"
+        },
+        {
+          "code": "care_instructions",
+          "value": "https://example.com/garden-set-care",
+          "type": "url",
+          "label": "Care Instructions"
+        }
+      ],
+      "last_modified": "2025-03-23T13:45:00.000Z"
+    },
+    {
+      "id": 15,
+      "name": "L-Shaped Sofa",
+      "category_id": 6,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Dark Blue",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Velvet",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 270,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 210,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 85,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "reversible",
+          "value": true,
+          "type": "boolean",
+          "label": "Reversible Chaise"
+        },
+        {
+          "code": "storage",
+          "value": true,
+          "type": "boolean",
+          "label": "Storage Space"
+        },
+        {
+          "code": "features",
+          "value": ["corner sofa", "velvet", "modern"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-22T10:15:00.000Z"
+    },
+    {
+      "id": 16,
+      "name": "Recliner Armchair",
+      "category_id": 16,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Brown",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Leather",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 85,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 90,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 105,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "reclining",
+          "value": true,
+          "type": "boolean",
+          "label": "Reclining"
+        },
+        {
+          "code": "swivel",
+          "value": true,
+          "type": "boolean",
+          "label": "Swivel Base"
+        },
+        {
+          "code": "features",
+          "value": ["recliner", "leather", "comfortable"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-21T11:20:00.000Z"
+    },
+    {
+      "id": 17,
+      "name": "Floating Wall Shelves",
+      "category_id": 20,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "MDF",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "length",
+          "value": 80,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 20,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "thickness",
+          "value": 4,
+          "type": "number",
+          "label": "Thickness (cm)"
+        },
+        {
+          "code": "weight_capacity",
+          "value": 10,
+          "type": "number",
+          "label": "Weight Capacity (kg)"
+        },
+        {
+          "code": "set_of",
+          "value": 3,
+          "type": "number",
+          "label": "Set of"
+        },
+        {
+          "code": "installation_guide",
+          "value": "https://example.com/shelf-installation",
+          "type": "url",
+          "label": "Installation Guide"
+        }
+      ],
+      "last_modified": "2025-03-20T14:35:00.000Z"
+    },
+    {
+      "id": 18,
+      "name": "Outdoor Sun Lounger",
+      "category_id": 22,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Beige",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Aluminum and Textilene",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "length",
+          "value": 200,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "width",
+          "value": 60,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "adjustable_backrest",
+          "value": true,
+          "type": "boolean",
+          "label": "Adjustable Backrest"
+        },
+        {
+          "code": "foldable",
+          "value": true,
+          "type": "boolean",
+          "label": "Foldable"
+        },
+        {
+          "code": "weather_resistant",
+          "value": true,
+          "type": "boolean",
+          "label": "Weather Resistant"
+        },
+        {
+          "code": "features",
+          "value": ["lightweight", "rust-resistant", "UV-protection"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-19T09:45:00.000Z"
+    },
+    {
+      "id": 19,
+      "name": "Bookcase with Doors",
+      "category_id": 23,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Oak",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Solid Wood and Glass",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 120,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 40,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 180,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "shelves",
+          "value": 5,
+          "type": "number",
+          "label": "Number of Shelves"
+        },
+        {
+          "code": "adjustable_shelves",
+          "value": true,
+          "type": "boolean",
+          "label": "Adjustable Shelves"
+        },
+        {
+          "code": "assembly_required",
+          "value": true,
+          "type": "boolean",
+          "label": "Assembly Required"
+        }
+      ],
+      "last_modified": "2025-03-18T13:20:00.000Z"
+    },
+    {
+      "id": 20,
+      "name": "Children's Bunk Bed",
+      "category_id": 24,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Pine Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "dimensions",
+          "value": "205x96x165 cm",
+          "type": "text",
+          "label": "Dimensions (LxWxH)"
+        },
+        {
+          "code": "mattress_size",
+          "value": "90x200 cm",
+          "type": "text",
+          "label": "Mattress Size"
+        },
+        {
+          "code": "max_weight",
+          "value": 100,
+          "type": "number",
+          "label": "Maximum Weight per Bed (kg)"
+        },
+        {
+          "code": "ladder_included",
+          "value": true,
+          "type": "boolean",
+          "label": "Ladder Included"
+        },
+        {
+          "code": "safety_rail",
+          "value": true,
+          "type": "boolean",
+          "label": "Safety Rail"
+        },
+        {
+          "code": "certifications",
+          "value": ["EN 747-1", "EN 747-2"],
+          "type": "tags",
+          "label": "Safety Certifications"
+        }
+      ],
+      "last_modified": "2025-03-17T10:15:00.000Z"
+    },
+    {
+      "id": 21,
+      "name": "Smart Side Table",
+      "category_id": 7,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Matt Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Tempered Glass",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "diameter",
+          "value": 45,
+          "type": "number",
+          "label": "Diameter (cm)"
+        },
+        {
+          "code": "height",
+          "value": 55,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "wireless_charging",
+          "value": true,
+          "type": "boolean",
+          "label": "Wireless Charging"
+        },
+        {
+          "code": "usb_ports",
+          "value": 2,
+          "type": "number",
+          "label": "USB Ports"
+        },
+        {
+          "code": "features",
+          "value": ["smart", "charging", "modern"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-16T15:45:00.000Z"
+    },
+    {
+      "id": 22,
+      "name": "Modular Storage System",
+      "category_id": 0,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White and Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Plastic",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "cubes",
+          "value": 9,
+          "type": "number",
+          "label": "Number of Cubes"
+        },
+        {
+          "code": "cube_size",
+          "value": "35x35x35 cm",
+          "type": "text",
+          "label": "Cube Size"
+        },
+        {
+          "code": "expandable",
+          "value": true,
+          "type": "boolean",
+          "label": "Expandable"
+        },
+        {
+          "code": "assembly_required",
+          "value": true,
+          "type": "boolean",
+          "label": "Assembly Required"
+        },
+        {
+          "code": "features",
+          "value": ["modular", "customizable", "versatile"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-16T15:45:00.000Z"
+    },
+    {
+      "id": 23,
+      "name": "Premium Bean Bag Chair",
+      "category_id": 16,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Charcoal",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Microsuede",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "diameter",
+          "value": 110,
+          "type": "number",
+          "label": "Diameter (cm)"
+        },
+        {
+          "code": "height",
+          "value": 70,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "filling",
+          "value": "EPS Beads",
+          "type": "text",
+          "label": "Filling"
+        },
+        {
+          "code": "removable_cover",
+          "value": true,
+          "type": "boolean",
+          "label": "Removable Cover"
+        },
+        {
+          "code": "machine_washable",
+          "value": true,
+          "type": "boolean",
+          "label": "Machine Washable"
+        },
+        {
+          "code": "features",
+          "value": ["comfortable", "lightweight", "durable"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-15T14:30:00.000Z"
+    },
+    {
+      "id": 24,
+      "name": "Wall-Mounted TV Cabinet",
+      "category_id": 8,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Grey and White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "MDF with High Gloss Finish",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 180,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 40,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 30,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "tv_size",
+          "value": "up to 65 inches",
+          "type": "text",
+          "label": "Suitable TV Size"
+        },
+        {
+          "code": "led_lighting",
+          "value": true,
+          "type": "boolean",
+          "label": "LED Lighting"
+        },
+        {
+          "code": "cable_management",
+          "value": true,
+          "type": "boolean",
+          "label": "Cable Management"
+        },
+        {
+          "code": "installation_guide",
+          "value": "https://example.com/tv-cabinet-installation",
+          "type": "url",
+          "label": "Installation Guide"
+        }
+      ],
+      "last_modified": "2025-03-14T12:20:00.000Z"
+    },
+    {
+      "id": 25,
+      "name": "Rustic Wooden Bench",
+      "category_id": 13,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Natural Wood",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Reclaimed Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "length",
+          "value": 140,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "width",
+          "value": 40,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "height",
+          "value": 45,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "weight_capacity",
+          "value": 250,
+          "type": "number",
+          "label": "Weight Capacity (kg)"
+        },
+        {
+          "code": "handcrafted",
+          "value": true,
+          "type": "boolean",
+          "label": "Handcrafted"
+        },
+        {
+          "code": "style",
+          "value": ["rustic", "farmhouse", "vintage"],
+          "type": "tags",
+          "label": "Style"
+        }
+      ],
+      "last_modified": "2025-03-13T11:10:00.000Z"
+    },
+    {
+      "id": 26,
+      "name": "Smart LED Ceiling Light",
+      "category_id": 19,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Aluminum and Acrylic",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "diameter",
+          "value": 50,
+          "type": "number",
+          "label": "Diameter (cm)"
+        },
+        {
+          "code": "wattage",
+          "value": 36,
+          "type": "number",
+          "label": "Wattage (W)"
+        },
+        {
+          "code": "lumens",
+          "value": 3000,
+          "type": "number",
+          "label": "Lumens"
+        },
+        {
+          "code": "color_temperature",
+          "value": "3000K-6500K Adjustable",
+          "type": "text",
+          "label": "Color Temperature"
+        },
+        {
+          "code": "smart_features",
+          "value": true,
+          "type": "boolean",
+          "label": "Smart Features"
+        },
+        {
+          "code": "voice_control",
+          "value": true,
+          "type": "boolean",
+          "label": "Voice Control"
+        },
+        {
+          "code": "compatible_with",
+          "value": ["Amazon Alexa", "Google Home", "Apple HomeKit"],
+          "type": "tags",
+          "label": "Compatible With"
+        }
+      ],
+      "last_modified": "2025-03-12T16:40:00.000Z"
+    },
+    {
+      "id": 27,
+      "name": "Queen Size Bed with Storage",
+      "category_id": 9,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Dark Grey",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Fabric and Wood",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 160,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "length",
+          "value": 200,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "storage_type",
+          "value": "Lift-up Base",
+          "type": "text",
+          "label": "Storage Type"
+        },
+        {
+          "code": "headboard",
+          "value": true,
+          "type": "boolean",
+          "label": "Headboard"
+        },
+        {
+          "code": "gas_lift",
+          "value": true,
+          "type": "boolean",
+          "label": "Gas Lift Mechanism"
+        },
+        {
+          "code": "mattress_included",
+          "value": false,
+          "type": "boolean",
+          "label": "Mattress Included"
+        },
+        {
+          "code": "assembly_video",
+          "value": "https://example.com/storage-bed-assembly",
+          "type": "url",
+          "label": "Assembly Video"
+        }
+      ],
+      "last_modified": "2025-03-11T09:25:00.000Z"
+    },
+    {
+      "id": 28,
+      "name": "Foldable Picnic Table",
+      "category_id": 21,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Natural Wood with Green Accents",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Treated Pine Wood and Steel",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "length",
+          "value": 120,
+          "type": "number",
+          "label": "Length (cm)"
+        },
+        {
+          "code": "width",
+          "value": 120,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "height",
+          "value": 70,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "seats",
+          "value": 4,
+          "type": "number",
+          "label": "Number of Seats"
+        },
+        {
+          "code": "foldable",
+          "value": true,
+          "type": "boolean",
+          "label": "Foldable"
+        },
+        {
+          "code": "weather_resistant",
+          "value": true,
+          "type": "boolean",
+          "label": "Weather Resistant"
+        },
+        {
+          "code": "umbrella_hole",
+          "value": true,
+          "type": "boolean",
+          "label": "Umbrella Hole"
+        },
+        {
+          "code": "features",
+          "value": ["portable", "compact", "easy-to-store"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-10T14:15:00.000Z"
+    },
+    {
+      "id": 29,
+      "name": "Minimalist Console Table",
+      "category_id": 0,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Black",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Metal and Tempered Glass",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 120,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 35,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 80,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "shelves",
+          "value": 2,
+          "type": "number",
+          "label": "Number of Shelves"
+        },
+        {
+          "code": "assembly_required",
+          "value": true,
+          "type": "boolean",
+          "label": "Assembly Required"
+        },
+        {
+          "code": "style",
+          "value": ["minimalist", "modern", "sleek"],
+          "type": "tags",
+          "label": "Style"
+        },
+        {
+          "code": "care_guide",
+          "value": "https://example.com/glass-furniture-care",
+          "type": "url",
+          "label": "Care Guide"
+        }
+      ],
+      "last_modified": "2025-03-09T11:30:00.000Z"
+    },
+    {
+      "id": 30,
+      "name": "Children's Study Desk",
+      "category_id": 14,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "White and Pink",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "MDF and Steel",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 100,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 50,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": "70-90",
+          "type": "text",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "adjustable_height",
+          "value": true,
+          "type": "boolean",
+          "label": "Adjustable Height"
+        },
+        {
+          "code": "drawer",
+          "value": 1,
+          "type": "number",
+          "label": "Number of Drawers"
+        },
+        {
+          "code": "bookshelf",
+          "value": true,
+          "type": "boolean",
+          "label": "Includes Bookshelf"
+        },
+        {
+          "code": "age_range",
+          "value": "6-12 years",
+          "type": "text",
+          "label": "Suitable Age Range"
+        },
+        {
+          "code": "features",
+          "value": ["ergonomic", "kid-friendly", "grows with child"],
+          "type": "tags",
+          "label": "Features"
+        }
+      ],
+      "last_modified": "2025-03-08T10:50:00.000Z"
+    }
+  ]
+}

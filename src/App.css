@@ -1,0 +1,290 @@
+/* Layout styles */
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.ant-layout-sider {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  z-index: 100;
+}
+
+.ant-layout-header {
+  padding: 0;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.site-layout {
+  margin-left: 200px;
+  transition: margin-left 0.2s;
+}
+
+.site-layout.collapsed {
+  margin-left: 80px;
+}
+
+.content-wrapper {
+  margin: 24px 16px;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.demo-info {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #e8e8e8;
+}
+
+.category-tree {
+  margin-bottom: 16px;
+}
+
+.product-list-controls {
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pagination-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.product-detail {
+  margin-bottom: 24px;
+}
+.text-center {
+  text-align: center;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+/* Responsive styles */
+/* Mobile view (up to 767px) */
+@media (max-width: 767px) {
+  /* Layout adjustments */
+  .ant-layout-sider {
+    position: absolute;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .site-layout,
+  .site-layout.collapsed {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    margin: 16px 8px;
+    padding: 16px;
+  }
+
+  /* Typography adjustments */
+  h1 {
+    font-size: 2em;
+  }
+
+  /* Component adjustments */
+  .login-card {
+    max-width: 100%;
+    margin: 0 16px;
+  }
+
+  .ant-table {
+    font-size: 12px;
+  }
+
+  .ant-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .ant-table-cell {
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  /* Controls on mobile */
+  .product-list-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-container {
+    justify-content: center;
+  }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+
+  .ant-select,
+  .ant-input,
+  .ant-input-number,
+  .ant-btn {
+    width: 100% !important;
+  }
+
+  /* Mobile sidebar toggle button */
+  .sidebar-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+}
+
+/* Tablet view (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .content-wrapper {
+    margin: 20px 12px;
+    padding: 20px;
+  }
+
+  .ant-layout-sider:not(.ant-layout-sider-collapsed) {
+    flex: 0 0 180px !important;
+    max-width: 180px !important;
+    min-width: 180px !important;
+    width: 180px !important;
+  }
+
+  .site-layout {
+    margin-left: 180px;
+  }
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+
+  .product-list-controls {
+    flex-wrap: wrap;
+  }
+}
+
+/* Hide fixed columns on smaller screens */
+@media (max-width: 1199px) {
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right {
+    position: static !important;
+  }
+}
+
+.sidebar-container {
+  position: relative;
+  z-index: 100;
+}
+
+/* Mobile sidebar styles */
+.sidebar-container.mobile {
+  position: absolute;
+  height: 100%;
+  z-index: 999;
+  transition: all 0.2s;
+}
+
+/* Hide mobile sidebar when collapsed */
+.sidebar-container.mobile.hidden .ant-layout-sider {
+  transform: translateX(-100%);
+}
+
+/* Adjust layout for mobile */
+.site-layout.mobile {
+  margin-left: 0 !important;
+}
+
+/* Ensure content takes full width on mobile */
+.site-layout.mobile .ant-layout-content {
+  width: 100%;
+}
+
+/* Make sure categories display horizontally on mobile */
+@media (max-width: 767px) {
+  /* Fix for category tree items displaying vertically */
+  .ant-tree-list-holder-inner {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Ensure category tree nodes display correctly */
+  .ant-tree-treenode {
+    width: 100% !important;
+    white-space: nowrap !important;
+  }
+
+  /* Better spacing for tree items on mobile */
+  .ant-tree-node-content-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Fix for table displays on mobile */
+  .ant-table-wrapper {
+    overflow-x: auto;
+  }
+
+  /* Better handling of Ant Design tables on mobile */
+  .ant-table table {
+    width: 100%;
+    min-width: 400px;
+  }
+
+  .ant-layout-content > div {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
