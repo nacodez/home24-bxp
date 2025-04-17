@@ -30,19 +30,15 @@ const DashboardPage: React.FC = () => {
         const products = await get<Product[]>("/products");
         setAllProducts(products);
 
-        // Create a Map to count products per category
         const categoryCounts = new Map<number, number>();
 
-        // Count products for each category
         products.forEach((product) => {
           if (product && product.category_id !== undefined) {
-            // Convert to number if it's a string
             const categoryId =
               typeof product.category_id === "string"
                 ? parseInt(product.category_id)
                 : product.category_id;
 
-            // Debug log to see what category IDs we're getting
             console.log(`Product ${product.id} has category_id: ${categoryId}`);
 
             const currentCount = categoryCounts.get(categoryId) || 0;
@@ -50,10 +46,8 @@ const DashboardPage: React.FC = () => {
           }
         });
 
-        // Debug: Log all counted categories
         console.log("Category counts:", Object.fromEntries(categoryCounts));
 
-        // Convert category IDs to numbers in both places to ensure matching
         const categoryStats = categories.map((category) => {
           const categoryId =
             typeof category.id === "string"
@@ -67,10 +61,8 @@ const DashboardPage: React.FC = () => {
           };
         });
 
-        // Debug: Log the stats before sorting
         console.log("Category stats before sorting:", categoryStats);
 
-        // Sort by count and take top 5
         setTopCategories(
           categoryStats.sort((a, b) => b.count - a.count).slice(0, 5)
         );
