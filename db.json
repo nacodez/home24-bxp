@@ -1711,6 +1711,56 @@
         }
       ],
       "last_modified": "2025-03-08T10:50:00.000Z"
+    },
+    {
+      "id": 31,
+      "name": "Teak Sofa",
+      "category_id": 6,
+      "attributes": [
+        {
+          "code": "color",
+          "value": "Brown",
+          "type": "text",
+          "label": "Color"
+        },
+        {
+          "code": "material",
+          "value": "Fabric",
+          "type": "text",
+          "label": "Material"
+        },
+        {
+          "code": "width",
+          "value": 220,
+          "type": "number",
+          "label": "Width (cm)"
+        },
+        {
+          "code": "depth",
+          "value": 95,
+          "type": "number",
+          "label": "Depth (cm)"
+        },
+        {
+          "code": "height",
+          "value": 85,
+          "type": "number",
+          "label": "Height (cm)"
+        },
+        {
+          "code": "convertible",
+          "value": true,
+          "type": "boolean",
+          "label": "Convertible"
+        },
+        {
+          "code": "tags",
+          "value": ["modern", "comfortable", "spacious"],
+          "type": "tags",
+          "label": "Tags"
+        }
+      ],
+      "last_modified": "2025-04-05T10:30:00.000Z"
     }
   ]
 }

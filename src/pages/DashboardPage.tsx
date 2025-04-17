@@ -21,6 +21,8 @@ const DashboardPage: React.FC = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [topCategories, setTopCategories] = useState<CategoryStat[]>([]);
 
+  console.log(topCategories);
+
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
@@ -28,22 +30,47 @@ const DashboardPage: React.FC = () => {
         const products = await get<Product[]>("/products");
         setAllProducts(products);
 
+        // Create a Map to count products per category
         const categoryCounts = new Map<number, number>();
 
+        // Count products for each category
         products.forEach((product) => {
-          if (product && "category_id" in product) {
-            const categoryId = product.category_id;
+          if (product && product.category_id !== undefined) {
+            // Convert to number if it's a string
+            const categoryId =
+              typeof product.category_id === "string"
+                ? parseInt(product.category_id)
+                : product.category_id;
+
+            // Debug log to see what category IDs we're getting
+            console.log(`Product ${product.id} has category_id: ${categoryId}`);
+
             const currentCount = categoryCounts.get(categoryId) || 0;
             categoryCounts.set(categoryId, currentCount + 1);
           }
         });
 
-        const categoryStats = categories.map((category) => ({
-          id: category.id,
-          name: category.name,
-          count: categoryCounts.get(category.id) || 0,
-        }));
+        // Debug: Log all counted categories
+        console.log("Category counts:", Object.fromEntries(categoryCounts));
 
+        // Convert category IDs to numbers in both places to ensure matching
+        const categoryStats = categories.map((category) => {
+          const categoryId =
+            typeof category.id === "string"
+              ? parseInt(category.id)
+              : category.id;
+
+          return {
+            id: categoryId,
+            name: category.name,
+            count: categoryCounts.get(categoryId) || 0,
+          };
+        });
+
+        // Debug: Log the stats before sorting
+        console.log("Category stats before sorting:", categoryStats);
+
+        // Sort by count and take top 5
         setTopCategories(
           categoryStats.sort((a, b) => b.count - a.count).slice(0, 5)
         );
