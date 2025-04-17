@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import MainLayout from "../components/Layout/MainLayout";
-import ProductDetails from "../components/Products/ProductDetails";
-import AttributeEditor from "../components/Products/AttributeEditor";
+import ProductDetails from "../components/Products/Details/ProductDetails";
+import AttributeEditor from "../components/Products/Attributes/AttributeEditor";
 import { useProducts } from "../hooks/useProducts";
 import { Product } from "../types/product.types";
 import { Tabs, Spin, Alert } from "antd";

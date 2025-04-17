@@ -14,7 +14,7 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContextProvider";
 import { LastModifiedProductProvider } from "./context/LastModifiedProductContext";
 
 const App: React.FC = () => {

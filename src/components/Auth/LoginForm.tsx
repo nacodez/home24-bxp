@@ -13,8 +13,8 @@ const LoginForm: React.FC = () => {
   const onFinish = async (values: LoginCredentials) => {
     try {
       await login(values);
-    } catch {
-      // Error will be shown through the authState
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
 

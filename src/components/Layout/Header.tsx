@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Layout,
-  Button,
-  Typography,
-  Space,
-  Dropdown,
-  Avatar,
-  Menu,
-} from "antd";
+import { Layout, Button, Typography, Space, Dropdown, Avatar } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -15,6 +7,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
+import type { MenuProps } from "antd";
 
 const { Header: AntHeader } = Layout;
 const { Text } = Typography;
@@ -27,13 +20,14 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
   const { state, logout } = useAuth();
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={logout}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
+  const menuItems: MenuProps["items"] = [
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: logout,
+    },
+  ];
 
   return (
     <AntHeader
@@ -55,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
 
       <Space>
         {state.user && (
-          <Dropdown overlay={menu} placement="bottomRight">
+          <Dropdown menu={{ items: menuItems }} placement="bottomRight">
             <Space style={{ cursor: "pointer" }}>
               <Avatar icon={<UserOutlined />} />
               <Text strong>{state.user.name}</Text>

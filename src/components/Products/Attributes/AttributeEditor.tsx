@@ -17,7 +17,7 @@ import {
   SaveOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { AttributeValue, AttributeType } from "../../types/product.types";
+import { AttributeValue, AttributeType } from "../../../types/product.types";
 
 const { Title, Text } = Typography;
 const { Option } = Select;

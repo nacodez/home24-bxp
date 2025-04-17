@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
 import { waitFor, screen } from "@testing-library/dom";
 import { MemoryRouter } from "react-router-dom";
-import ProductDetails from "./ProductDetails";
-import * as productsHook from "../../hooks/useProducts";
-import * as categoriesHook from "../../hooks/useCategories";
-import { mockProducts, mockCategories } from "../../tests/mocks";
+import ProductDetails from "../../Products/Details/ProductDetails";
+import * as productsHook from "../../../hooks/useProducts";
+import * as categoriesHook from "../../../hooks/useCategories";
+import { mockProducts, mockCategories } from "../../../tests/mocks";
 
 jest.mock("../../hooks/useProducts");
 jest.mock("../../hooks/useCategories");

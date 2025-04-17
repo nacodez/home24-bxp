@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Tag, Typography } from "antd";
-import { AttributeValue } from "../../types/product.types";
+import { AttributeValue } from "../../../types/product.types";
 
 const { Text } = Typography;
 

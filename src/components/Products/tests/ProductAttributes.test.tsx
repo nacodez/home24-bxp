@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import ProductAttributes from "./ProductAttributes";
-import { mockAttributes } from "../../tests/mocks";
+import ProductAttributes from "../Attributes/ProductAttributes";
+import { mockAttributes } from "../../../tests/mocks";
 
 describe("ProductAttributes Component", () => {
   test("renders all attribute rows correctly", () => {

@@ -8,9 +8,25 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useCategories } from "../../hooks/useCategories";
 import { Category } from "../../types/category.types";
+import type { MenuProps } from "antd";
 
 const { Sider } = Layout;
-const { SubMenu } = Menu;
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[]
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem;
+}
 
 interface SidebarProps {
   collapsed: boolean;
@@ -31,36 +47,57 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
     return ["dashboard"];
   };
 
-  const renderCategoryMenu = (
+  const buildCategoryMenuItems = (
     categories: (Category & { children: Category[] })[]
-  ) => {
+  ): MenuItem[] => {
     return categories.map((category) => {
       if (category.children && category.children.length > 0) {
-        return (
-          <SubMenu
-            key={`category-${category.id}`}
-            title={category.name}
-            icon={<AppstoreOutlined />}
-          >
-            <Menu.Item key={`category-${category.id}-products`}>
-              <Link to={`/products?categoryId=${category.id}`}>Products</Link>
-            </Menu.Item>
-            {renderCategoryMenu(
-              category.children as (Category & { children: Category[] })[]
-            )}
-          </SubMenu>
+        const childItems: MenuItem[] = [
+          getItem(
+            <Link to={`/products?categoryId=${category.id}`}>
+              All {category.name} Products
+            </Link>,
+            `category-${category.id}-products`
+          ),
+          ...buildCategoryMenuItems(
+            category.children as (Category & { children: Category[] })[]
+          ),
+        ];
+
+        return getItem(
+          category.name,
+          `category-${category.id}`,
+          <AppstoreOutlined />,
+          childItems
         );
       }
 
-      return (
-        <Menu.Item key={`category-${category.id}`} icon={<AppstoreOutlined />}>
-          <Link to={`/products?categoryId=${category.id}`}>
-            {category.name}
-          </Link>
-        </Menu.Item>
+      return getItem(
+        <Link to={`/products?categoryId=${category.id}`}>{category.name}</Link>,
+        `category-${category.id}`,
+        <AppstoreOutlined />
       );
     });
   };
+
+  const items: MenuItem[] = [
+    getItem(<Link to="/">Dashboard</Link>, "dashboard", <DashboardOutlined />),
+    getItem(
+      <Link to="/products">All Products</Link>,
+      "products",
+      <ShoppingOutlined />
+    ),
+    getItem(
+      "Categories",
+      "categories",
+      <AppstoreOutlined />,
+      !isLoading
+        ? buildCategoryMenuItems(
+            categoryTree as (Category & { children: Category[] })[]
+          )
+        : []
+    ),
+  ];
 
   return (
     <Sider
@@ -104,26 +141,8 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         selectedKeys={getSelectedKeys()}
         defaultOpenKeys={["categories"]}
         style={{ borderRight: 0 }}
-      >
-        <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-          <Link to="/">Dashboard</Link>
-        </Menu.Item>
-
-        <Menu.Item key="products" icon={<ShoppingOutlined />}>
-          <Link to="/products">All Products</Link>
-        </Menu.Item>
-
-        <SubMenu
-          key="categories"
-          icon={<AppstoreOutlined />}
-          title="Categories"
-        >
-          {!isLoading &&
-            renderCategoryMenu(
-              categoryTree as (Category & { children: Category[] })[]
-            )}
-        </SubMenu>
-      </Menu>
+        items={items}
+      />
     </Sider>
   );
 };

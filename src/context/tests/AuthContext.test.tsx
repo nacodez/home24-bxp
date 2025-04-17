@@ -1,8 +1,9 @@
 import React from "react";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider, AuthContext } from "./AuthContext";
-import * as authApi from "../api/authApi";
+import { AuthContext } from "../AuthContext";
+import { AuthProvider } from "../AuthContextProvider";
+import * as authApi from "../../api/authApi";
 
 // Mock the auth API
 jest.mock("../api/authApi", () => ({
