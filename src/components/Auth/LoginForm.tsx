@@ -2,6 +2,7 @@ import { Form, Input, Button, Card, Alert, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
 import { LoginCredentials } from "../../types/auth.types";
+import { isFirebaseAvailable } from "../../firebase/config";
 
 const { Title, Text } = Typography;
 
@@ -57,7 +58,18 @@ const LoginForm: React.FC = () => {
           />
         )}
 
+        {!isFirebaseAvailable && (
+          <Alert
+            message="Default Firebase Not Configured"
+            description="If Firebase authentication is not configured, Please use the demo credentials to log in."
+            type="info"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
+
         <div
+          className="demo-info"
           style={{
             background: "#f9f9f9",
             padding: "12px",
