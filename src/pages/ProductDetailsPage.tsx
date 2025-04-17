@@ -7,6 +7,7 @@ import { useProducts } from "../hooks/useProducts";
 import { Product } from "../types/product.types";
 import { Tabs, Spin, Alert } from "antd";
 import { AttributeValue } from "../types/product.types";
+import type { TabsProps } from "antd";
 
 interface ProductDetailsPageProps {
   editMode?: boolean;
@@ -83,21 +84,29 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
     );
   }
 
+  const tabItems: TabsProps["items"] = [
+    {
+      key: "info",
+      label: "Product Information",
+      children: <ProductDetails editMode={true} />,
+    },
+    {
+      key: "attributes",
+      label: "Edit Attributes",
+      children: (
+        <AttributeEditor
+          productId={parseInt(id as string)}
+          attributes={product.attributes}
+          onSave={handleSaveAttributes}
+        />
+      ),
+    },
+  ];
+
   return (
     <MainLayout>
       {editMode ? (
-        <Tabs defaultActiveKey="attributes">
-          <Tabs.TabPane tab="Product Information" key="info">
-            <ProductDetails editMode={true} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Edit Attributes" key="attributes">
-            <AttributeEditor
-              productId={parseInt(id as string)}
-              attributes={product.attributes}
-              onSave={handleSaveAttributes}
-            />
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs defaultActiveKey="attributes" items={tabItems} />
       ) : (
         <ProductDetails />
       )}
