@@ -1,4 +1,4 @@
-import { get } from './apiClient';
+import { get } from './httpService';
 import { Category } from '../types/category.types';
 
 export const fetchCategories = async (): Promise<Category[]> => {

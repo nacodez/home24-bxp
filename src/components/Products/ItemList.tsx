@@ -10,8 +10,8 @@ import {
 } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link, useSearchParams } from "react-router-dom";
-import { Product } from "../../types/product.types";
-import { useProducts } from "../../hooks/useProducts";
+import { Product } from "../../types/item.types";
+import { useProducts } from "../../hooks/useItems";
 import { useCategories } from "../../hooks/useCategories";
 import { TablePaginationConfig } from "antd/es/table";
 import { ColumnsType } from "antd/es/table";

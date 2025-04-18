@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from "react";
-import { LoginCredentials } from "../types/auth.types";
-import { login as apiLogin, logout as apiLogout } from "../api/authApi";
-import { AuthContext, initialState, authReducer } from "./AuthContext";
+import { LoginCredentials } from "../types/user.types";
+import { login as apiLogin, logout as apiLogout } from "../api/loginService";
+import { AuthContext, initialState, authReducer } from "./UserSession";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

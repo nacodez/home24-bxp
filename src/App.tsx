@@ -7,15 +7,15 @@ import {
 } from "react-router-dom";
 import { ConfigProvider } from "antd";
 
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-import ProductListPage from "./pages/ProductListPage";
-import ProductDetailsPage from "./pages/ProductDetailsPage";
+import LoginPage from "./pages/SignInPage";
+import DashboardPage from "./pages/HomePage";
+import ProductListPage from "./pages/CatalogPage";
+import ProductDetailsPage from "./pages/ItemDetailsPage";
 
-import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import ProtectedRoute from "./components/Auth/AuthGuard";
 
-import { AuthProvider } from "./context/AuthContextProvider";
-import { LastModifiedProductProvider } from "./context/LastModifiedProductContext";
+import { AuthProvider } from "./context/SessionProvider";
+import { LastModifiedProductProvider } from "./context/RecentItemContext";
 
 const App: React.FC = () => {
   return (

@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import LoginForm from "../components/Auth/LoginForm";
+import LoginForm from "../components/Auth/SignInForm";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: React.FC = () => {

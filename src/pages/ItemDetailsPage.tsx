@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MainLayout from "../components/Layout/MainLayout";
-import ProductDetails from "../components/Products/Details/ProductDetails";
+import MainLayout from "../components/Layout/AppLayout";
+import ProductDetails from "../components/Products/Details/ItemDetails";
 import AttributeEditor from "../components/Products/Attributes/AttributeEditor";
-import { useProducts } from "../hooks/useProducts";
-import { Product } from "../types/product.types";
+import { useProducts } from "../hooks/useItems";
+import { Product } from "../types/item.types";
 import { Tabs, Spin, Alert } from "antd";
-import { AttributeValue } from "../types/product.types";
+import { AttributeValue } from "../types/item.types";
 import type { TabsProps } from "antd";
 
 interface ProductDetailsPageProps {

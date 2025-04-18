@@ -1,4 +1,4 @@
-import { Product, AttributeValue } from '../types/product.types';
+import { Product, AttributeValue } from '../types/item.types';
 import { Category } from '../types/category.types';
 
 // Mock products data

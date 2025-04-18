@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { Product } from "../types/product.types";
+import { Product } from "../types/item.types";
 
 interface LastModifiedProductContextType {
   lastModifiedProduct: Product | null;

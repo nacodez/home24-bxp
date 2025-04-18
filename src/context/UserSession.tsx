@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { AuthState, User, LoginCredentials } from "../types/auth.types";
+import { AuthState, User, LoginCredentials } from "../types/user.types";
 
 export const initialState: AuthState = {
   user: null,

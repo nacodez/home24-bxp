@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import { LastModifiedProduct } from "../Products/LastModifiedProduct";
+import Header from "./TopBar";
+import Sidebar from "./NavMenu";
+import { LastModifiedProduct } from "../Products/RecentItem";
 
 const { Content } = Layout;
 

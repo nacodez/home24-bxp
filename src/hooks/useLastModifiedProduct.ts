@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { LastModifiedProductContext } from '../context/LastModifiedProductContext';
+import { LastModifiedProductContext } from '../context/RecentItemContext';
 
 export const useLastModifiedProduct = () => {
     const context = useContext(LastModifiedProductContext);

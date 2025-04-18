@@ -1,7 +1,7 @@
 import { Form, Input, Button, Card, Alert, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
-import { LoginCredentials } from "../../types/auth.types";
+import { LoginCredentials } from "../../types/user.types";
 import { isFirebaseAvailable } from "../../firebase/config";
 
 const { Title, Text } = Typography;

@@ -1,6 +1,6 @@
 import React from "react";
-import MainLayout from "../components/Layout/MainLayout";
-import ProductList from "../components/Products/ProductList";
+import MainLayout from "../components/Layout/AppLayout";
+import ProductList from "../components/Products/ItemList";
 
 const ProductListPage: React.FC = () => {
   return (

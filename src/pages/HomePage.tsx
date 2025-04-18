@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Statistic, Typography, List, Spin } from "antd";
 import { ShoppingOutlined, AppstoreOutlined } from "@ant-design/icons";
-import MainLayout from "../components/Layout/MainLayout";
+import MainLayout from "../components/Layout/AppLayout";
 import { useCategories } from "../hooks/useCategories";
 import { Link } from "react-router-dom";
-import { get } from "../api/apiClient";
-import { Product } from "../types/product.types";
+import { get } from "../api/httpService";
+import { Product } from "../types/item.types";
 
 const { Title } = Typography;
 

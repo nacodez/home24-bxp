@@ -1,5 +1,5 @@
-import { get, post, put } from './apiClient';
-import { Product, ProductFilterConfig, ProductsResponse } from '../types/product.types';
+import { get, post, put } from './httpService';
+import { Product, ProductFilterConfig, ProductsResponse } from '../types/item.types';
 
 export const fetchProducts = async (filter: ProductFilterConfig): Promise<ProductsResponse> => {
     const { page, pageSize, categoryId, sort } = filter;

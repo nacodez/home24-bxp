@@ -10,10 +10,10 @@ import {
 } from "antd";
 import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useProducts } from "../../../hooks/useProducts";
+import { useProducts } from "../../../hooks/useItems";
 import { useCategories } from "../../../hooks/useCategories";
 import ProductAttributes from "../Attributes/ProductAttributes";
-import { Product } from "../../../types/product.types";
+import { Product } from "../../../types/item.types";
 
 const { Title } = Typography;
 

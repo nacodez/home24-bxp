@@ -6,7 +6,7 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { auth, isFirebaseAvailable } from '../firebase/config';
-import { User, LoginCredentials } from '../types/auth.types';
+import { User, LoginCredentials } from '../types/user.types';
 
 export const login = async (credentials: LoginCredentials): Promise<{ user: User, token: string }> => {
     try {

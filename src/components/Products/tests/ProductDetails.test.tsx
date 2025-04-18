@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
 import { waitFor, screen } from "@testing-library/dom";
 import { MemoryRouter } from "react-router-dom";
-import ProductDetails from "../../Products/Details/ProductDetails";
-import * as productsHook from "../../../hooks/useProducts";
+import ProductDetails from "../Details/ItemDetails";
+import * as productsHook from "../../../hooks/useItems";
 import * as categoriesHook from "../../../hooks/useCategories";
 import { mockProducts, mockCategories } from "../../../tests/mocks";
 

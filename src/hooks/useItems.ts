@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Product, ProductFilterConfig, ProductsResponse } from '../types/product.types';
+import { Product, ProductFilterConfig, ProductsResponse } from '../types/item.types';
 import { fetchProducts, fetchProductById, updateProduct } from '../api/productApi';
 import { useLastModifiedProduct } from './useLastModifiedProduct';
 
