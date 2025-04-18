@@ -1,18 +1,16 @@
 import React from "react";
 import { Table, Tag, Typography } from "antd";
-import { AttributeValue } from "../../../types/item.types";
+import { AttrVal } from "../../../types/item.types";
 
 const { Text } = Typography;
 
-interface ProductAttributesProps {
-  attributes: AttributeValue[];
+interface ProdPropsProps {
+  attributes: AttrVal[];
   readOnly?: boolean;
 }
 
-const ProductAttributes: React.FC<ProductAttributesProps> = ({
-  attributes,
-}) => {
-  const columns = [
+const ItemProperties: React.FC<ProdPropsProps> = ({ attributes }) => {
+  const cols = [
     {
       title: "Code",
       dataIndex: "code",
@@ -62,7 +60,7 @@ const ProductAttributes: React.FC<ProductAttributesProps> = ({
       width: "45%",
       render: (
         value: string | number | boolean | string[] | null,
-        record: AttributeValue
+        record: AttrVal
       ) => {
         switch (record.type) {
           case "boolean":
@@ -96,7 +94,7 @@ const ProductAttributes: React.FC<ProductAttributesProps> = ({
   return (
     <Table
       rowKey="code"
-      columns={columns}
+      columns={cols}
       dataSource={attributes}
       pagination={false}
       size="middle"
@@ -104,4 +102,4 @@ const ProductAttributes: React.FC<ProductAttributesProps> = ({
   );
 };
 
-export default ProductAttributes;
+export default ItemProperties;

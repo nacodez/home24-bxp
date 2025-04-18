@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import ProductAttributes from "../Attributes/ProductAttributes";
+import ProductAttributes from "../Attributes/ItemProperties";
 import { mockAttributes } from "../../../tests/mocks";
 
 describe("ProductAttributes Component", () => {
@@ -21,7 +21,7 @@ describe("ProductAttributes Component", () => {
     const manualElements = screen.getAllByText("manual");
     expect(manualElements.length).toBeGreaterThan(0);
 
-    // Verify attribute values
+    //Attribute values verification
     expect(screen.getByText("Red")).toBeInTheDocument();
     expect(screen.getByText("100")).toBeInTheDocument();
     expect(screen.getByText("Yes")).toBeInTheDocument();

@@ -1,87 +1,88 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Product, ProductFilterConfig, ProductsResponse } from '../types/item.types';
-import { fetchProducts, fetchProductById, updateProduct } from '../api/productApi';
-import { useLastModifiedProduct } from './useLastModifiedProduct';
+import { Item, FilterOpts, ItemsResponse } from '../types/item.types';
+import { fetchItems, getItemById, updateItem } from '../api/productService';
+import { useRecentItem } from './useRecentItem';
 
-export const useProducts = (initialFilter?: Partial<ProductFilterConfig>) => {
-    const [products, setProducts] = useState<Product[]>([]);
+export const useItems = (initFilter?: Partial<FilterOpts>) => {
+    const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const { setLastModifiedProduct } = useLastModifiedProduct();
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState<string | null>(null);
+    const { setRecentItem } = useRecentItem();
 
-    const [filter, setFilter] = useState<ProductFilterConfig>({
+    const [filter, setFilter] = useState<FilterOpts>({
         page: 1,
         pageSize: 10,
-        ...initialFilter
+        ...initFilter
     });
 
-    const loadProducts = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
+    const loadItems = useCallback(async () => {
+        setLoading(true);
+        setErr(null);
 
         try {
-            const response: ProductsResponse = await fetchProducts(filter);
-            setProducts(response.products);
-            setTotal(response.total);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch products');
+            const resp: ItemsResponse = await fetchItems(filter);
+            setItems(resp.products);
+            setTotal(resp.total);
+        } catch (error) {
+            setErr(error instanceof Error ? error.message : 'Failed to fetch items');
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     }, [filter]);
 
     useEffect(() => {
-        loadProducts();
-    }, [loadProducts]);
+        loadItems();
+    }, [loadItems]);
 
-    const updateProductAttributes = async (productId: number, updatedProduct: Partial<Product>) => {
-        setIsLoading(true);
-        setError(null);
+    const updateItemAttrs = async (itemId: number, updatedItem: Partial<Item>) => {
+        setLoading(true);
+        setErr(null);
 
         try {
-            const updatedProductData = await updateProduct(productId, updatedProduct);
-
-            setProducts(prevProducts =>
-                prevProducts.map(product =>
-                    product.id === productId ? updatedProductData : product
+            const updatedData = await updateItem(itemId, updatedItem);
+            setItems(prevItems =>
+                prevItems.map(item =>
+                    item.id === itemId ? updatedData : item
                 )
             );
 
-            setLastModifiedProduct(updatedProductData);
+            setRecentItem(updatedData);
 
-            return updatedProductData;
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to update product');
-            throw err;
+            return updatedData;
+        } catch (error) {
+            setErr(error instanceof Error ? error.message : 'Failed to update item');
+            throw error;
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
-    const getProductById = useCallback(async (id: number): Promise<Product> => {
-        setIsLoading(true);
-        setError(null);
+    const fetchItemById = useCallback(async (id: number): Promise<Item> => {
+        setLoading(true);
+        setErr(null);
 
         try {
-            return await fetchProductById(id);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch product');
-            throw err;
+            const item = await getItemById(id);
+            return item;
+        } catch (error) {
+            console.error(`Error fetching item by ID ${id}:`, error);
+            setErr(error instanceof Error ? error.message : 'Failed to fetch item');
+            throw error;
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     }, []);
 
     return {
-        products,
+        items,
         total,
-        isLoading,
-        error,
+        loading,
+        err,
         filter,
         setFilter,
-        updateProductAttributes,
-        getProductById,
-        refresh: loadProducts
+        updateItemAttrs,
+        getItemById: fetchItemById,
+        refresh: loadItems
     };
 };

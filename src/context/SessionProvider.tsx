@@ -1,12 +1,12 @@
 import React, { useReducer, useEffect } from "react";
-import { LoginCredentials } from "../types/user.types";
-import { login as apiLogin, logout as apiLogout } from "../api/loginService";
-import { AuthContext, initialState, authReducer } from "./UserSession";
+import { LoginCreds } from "../types/user.types";
+import { doLogin, doLogout } from "../api/loginService";
+import { UserContext, initialState, userReducer } from "./UserSession";
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(userReducer, initialState);
 
   useEffect(() => {
     if (state.token) {
@@ -17,36 +17,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [state.token]);
 
   useEffect(() => {
-    const loadUser = async () => {
+    const loadUserData = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
           const userData = JSON.parse(localStorage.getItem("user") || "{}");
           if (userData.id) {
             dispatch({
-              type: "LOGIN_SUCCESS",
+              type: "LOGIN_OK",
               payload: { user: userData, token },
             });
           }
-        } catch {
+        } catch (err) {
+          console.error("Loading user data from localStorage is failed", err);
           localStorage.removeItem("token");
           localStorage.removeItem("user");
         }
       }
     };
 
-    loadUser();
+    loadUserData();
   }, []);
 
-  const login = async (credentials: LoginCredentials) => {
-    dispatch({ type: "LOGIN_REQUEST" });
+  const login = async (creds: LoginCreds) => {
+    dispatch({ type: "LOGIN_START" });
     try {
-      const { user, token } = await apiLogin(credentials);
+      const { user, token } = await doLogin(creds);
       localStorage.setItem("user", JSON.stringify(user));
-      dispatch({ type: "LOGIN_SUCCESS", payload: { user, token } });
+      dispatch({ type: "LOGIN_OK", payload: { user, token } });
     } catch (error) {
       dispatch({
-        type: "LOGIN_FAILURE",
+        type: "LOGIN_ERR",
         payload: error instanceof Error ? error.message : "Login failed",
       });
       throw error;
@@ -54,15 +55,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    apiLogout();
+    doLogout();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     dispatch({ type: "LOGOUT" });
   };
 
   return (
-    <AuthContext.Provider value={{ state, login, logout }}>
+    <UserContext.Provider value={{ state, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };

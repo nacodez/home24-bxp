@@ -1,15 +1,15 @@
 import { Navigate } from "react-router-dom";
-import LoginForm from "../components/Auth/SignInForm";
-import { useAuth } from "../hooks/useAuth";
+import SignInForm from "../components/Auth/SignInForm";
+import { useUser } from "../hooks/useUser";
 
-const LoginPage: React.FC = () => {
-  const { state } = useAuth();
+const SignInPage: React.FC = () => {
+  const { state } = useUser();
 
   if (state.isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  return <LoginForm />;
+  return <SignInForm />;
 };
 
-export default LoginPage;
+export default SignInPage;

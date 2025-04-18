@@ -7,66 +7,67 @@ import {
 } from "react-router-dom";
 import { ConfigProvider } from "antd";
 
-import LoginPage from "./pages/SignInPage";
-import DashboardPage from "./pages/HomePage";
-import ProductListPage from "./pages/CatalogPage";
-import ProductDetailsPage from "./pages/ItemDetailsPage";
+import SignInPage from "./pages/SignInPage";
+import HomePage from "./pages/HomePage";
+import ItemPage from "./pages/ItemPage";
 
-import ProtectedRoute from "./components/Auth/AuthGuard";
+import ItemDetailPage from "./pages/ItemDetailPage";
 
-import { AuthProvider } from "./context/SessionProvider";
-import { LastModifiedProductProvider } from "./context/RecentItemContext";
+import AuthGuard from "./components/Auth/AuthGuard";
+
+import { UserProvider } from "./context/SessionProvider";
+import RecentItemProvider from "./context/RecentItemProvider";
 
 const App: React.FC = () => {
   return (
     <ConfigProvider>
-      <AuthProvider>
-        <LastModifiedProductProvider>
+      <UserProvider>
+        <RecentItemProvider>
           <Router>
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<SignInPage />} />
 
               <Route
                 path="/"
                 element={
-                  <ProtectedRoute>
-                    <DashboardPage />
-                  </ProtectedRoute>
+                  <AuthGuard>
+                    <HomePage />
+                  </AuthGuard>
                 }
               />
 
               <Route
                 path="/products"
                 element={
-                  <ProtectedRoute>
-                    <ProductListPage />
-                  </ProtectedRoute>
+                  <AuthGuard>
+                    <ItemPage />
+                  </AuthGuard>
                 }
               />
 
               <Route
                 path="/products/:id"
                 element={
-                  <ProtectedRoute>
-                    <ProductDetailsPage />
-                  </ProtectedRoute>
+                  <AuthGuard>
+                    <ItemDetailPage />
+                  </AuthGuard>
                 }
               />
 
               <Route
                 path="/products/:id/edit"
                 element={
-                  <ProtectedRoute>
-                    <ProductDetailsPage editMode={true} />
-                  </ProtectedRoute>
+                  <AuthGuard>
+                    <ItemDetailPage editMode={true} />
+                  </AuthGuard>
                 }
               />
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>
-        </LastModifiedProductProvider>
-      </AuthProvider>
+        </RecentItemProvider>
+      </UserProvider>
     </ConfigProvider>
   );
 };

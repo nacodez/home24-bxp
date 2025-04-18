@@ -1,20 +1,20 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useUser } from "../../hooks/useUser";
 
-interface ProtectedRouteProps {
+interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { state } = useAuth();
-  const location = useLocation();
+const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+  const { state } = useUser();
+  const loc = useLocation();
 
   if (!state.isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: loc }} replace />;
   }
 
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default AuthGuard;

@@ -4,12 +4,12 @@ export interface User {
     name: string;
 }
 
-export interface LoginCredentials {
+export interface LoginCreds {
     email: string;
     password: string;
 }
 
-export interface AuthState {
+export interface UserState {
     user: User | null;
     token: string | null;
     isAuthenticated: boolean;

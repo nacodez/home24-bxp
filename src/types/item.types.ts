@@ -1,33 +1,33 @@
-export type AttributeType = 'number' | 'text' | 'url' | 'tags' | 'boolean';
+export type AttrType = 'number' | 'text' | 'url' | 'tags' | 'boolean';
 
-export interface AttributeValue {
+export interface AttrVal {
     code: string;
     value: string | number | boolean | string[] | null;
-    type: AttributeType;
+    type: AttrType;
     label?: string;
 }
 
-export interface Product {
+export interface Item {
     id: number;
     name: string;
     category_id: number;
-    attributes: AttributeValue[];
+    attributes: AttrVal[];
     last_modified?: string;
 }
 
-export interface ProductsResponse {
-    products: Product[];
+export interface ItemsResponse {
+    products: Item[];
     total: number;
 }
 
-export interface ProductSortConfig {
-    field: keyof Product | '';
+export interface SortConfig {
+    field: keyof Item | '';
     direction: 'asc' | 'desc';
 }
 
-export interface ProductFilterConfig {
+export interface FilterOpts {
     categoryId?: number;
     page: number;
     pageSize: number;
-    sort?: ProductSortConfig;
+    sort?: SortConfig;
 }

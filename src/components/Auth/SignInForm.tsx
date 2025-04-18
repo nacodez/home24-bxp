@@ -1,24 +1,24 @@
 import { Form, Input, Button, Card, Alert, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useAuth } from "../../hooks/useAuth";
-import { LoginCredentials } from "../../types/user.types";
+import { useUser } from "../../hooks/useUser";
+import { LoginCreds } from "../../types/user.types";
 import { isFirebaseAvailable } from "../../firebase/config";
 
 const { Title, Text } = Typography;
 
-const LoginForm: React.FC = () => {
-  const { login, state } = useAuth();
+const SignInForm: React.FC = () => {
+  const { login, state } = useUser();
   const [form] = Form.useForm();
 
-  const onFinish = async (values: LoginCredentials) => {
+  const handleSubmit = async (vals: LoginCreds) => {
     try {
-      await login(values);
-    } catch (error) {
-      console.error("Login failed:", error);
+      await login(vals);
+    } catch (err) {
+      console.error("Login failed:", err);
     }
   };
 
-  const fillDemoCredentials = () => {
+  const setDemoLogin = () => {
     form.setFieldsValue({
       email: "demo@home24.de",
       password: "password",
@@ -91,7 +91,7 @@ const LoginForm: React.FC = () => {
           </div>
           <Button
             type="link"
-            onClick={fillDemoCredentials}
+            onClick={setDemoLogin}
             style={{ padding: 0, height: "auto", marginTop: "4px" }}
           >
             Auto-fill demo credentials
@@ -103,7 +103,7 @@ const LoginForm: React.FC = () => {
           name="login"
           layout="vertical"
           initialValues={{ remember: true }}
-          onFinish={onFinish}
+          onFinish={handleSubmit}
         >
           <Form.Item
             name="email"
@@ -145,4 +145,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default SignInForm;

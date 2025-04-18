@@ -10,113 +10,112 @@ import {
   Card,
   Typography,
   Modal,
+  message,
+  Popconfirm,
 } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
   SaveOutlined,
-  ExclamationCircleOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
-import { AttributeValue, AttributeType } from "../../../types/item.types";
+import { AttrVal, AttrType } from "../../../types/item.types";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
-const { confirm } = Modal;
 
-interface AttributeEditorProps {
-  productId: number;
-  attributes: AttributeValue[];
-  onSave: (attributes: AttributeValue[]) => Promise<void>;
+interface EditAttrsProps {
+  itemId: number;
+  attributes: AttrVal[];
+  onSave: (attributes: AttrVal[]) => Promise<void>;
 }
-interface AttributeFormValues {
+
+interface AttrFormValues {
   code: string;
-  type: AttributeType;
+  type: AttrType;
   label?: string;
   value: string | number | boolean | string[] | null;
 }
 
-const AttributeEditor: React.FC<AttributeEditorProps> = ({
-  attributes: initialAttributes,
+const EditAttributes: React.FC<EditAttrsProps> = ({
+  attributes: initAttrs,
   onSave,
 }) => {
-  const [attributes, setAttributes] =
-    useState<AttributeValue[]>(initialAttributes);
-  const [form] = Form.useForm<AttributeFormValues>();
-  const [editing, setEditing] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [attrs, setAttrs] = useState<AttrVal[]>(initAttrs);
+  const [form] = Form.useForm<AttrFormValues>();
+  const [editingAttr, setEditingAttr] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Handle saving all attributes
-  const handleSave = async () => {
+  const saveChanges = async () => {
     try {
-      setSaving(true);
-      await onSave(attributes);
-      setEditing(null);
-    } catch (error) {
-      console.error("Failed to save attributes", error);
+      setIsSaving(true);
+      await onSave(attrs);
+      setEditingAttr(null);
+      message.success("Attributes saved successfully");
+    } catch (err) {
+      console.error("Failed to save attributes", err);
+      message.error("Failed to save attributes");
     } finally {
-      setSaving(false);
+      setIsSaving(false);
     }
   };
 
-  // Add a new attribute
-  const handleAddAttribute = () => {
-    const newAttribute: AttributeValue = {
+  const addNewAttr = () => {
+    const newAttr: AttrVal = {
       code: `attr_${Date.now()}`,
       value: "",
       type: "text",
       label: "",
     };
 
-    setAttributes([...attributes, newAttribute]);
-    setEditing(newAttribute.code);
+    setAttrs([...attrs, newAttr]);
+    setEditingAttr(newAttr.code);
   };
 
-  // Delete an attribute
-  const handleDeleteAttribute = (code: string) => {
-    confirm({
-      title: "Are you sure you want to delete this attribute?",
-      icon: <ExclamationCircleOutlined />,
-      content: "This action cannot be undone.",
-      onOk() {
-        setAttributes(attributes.filter((attr) => attr.code !== code));
-        if (editing === code) {
-          setEditing(null);
-        }
-      },
-    });
+  const handleDeleteConfirm = (codeToDelete: string) => {
+    const newAttrs = attrs.filter((attr) => attr.code !== codeToDelete);
+    setAttrs(newAttrs);
+
+    if (editingAttr === codeToDelete) {
+      setEditingAttr(null);
+    }
+
+    message.success(`Attribute deleted successfully`);
   };
 
-  // Edit an attribute
-  const startEditing = (code: string) => {
-    const attribute = attributes.find((attr) => attr.code === code);
-    if (attribute) {
+  const handleDeleteCancel = () => {
+    message.info("Deletion canceled");
+  };
+
+  const beginEdit = (code: string) => {
+    const attr = attrs.find((attr) => attr.code === code);
+    if (attr) {
       form.setFieldsValue({
-        code: attribute.code,
-        type: attribute.type,
-        label: attribute.label || "",
-        value: attribute.value,
+        code: attr.code,
+        type: attr.type,
+        label: attr.label || "",
+        value: attr.value,
       });
-      setEditing(code);
+      setEditingAttr(code);
     }
   };
 
-  // Cancel editing
-  const cancelEditing = () => {
-    setEditing(null);
+  const cancelEdit = () => {
+    setEditingAttr(null);
     form.resetFields();
   };
 
-  // Update an attribute
-  const updateAttribute = (values: AttributeFormValues) => {
-    const updatedAttributes = attributes.map((attr) =>
-      attr.code === editing ? { ...attr, ...values } : attr
+  const updateAttr = (values: AttrFormValues) => {
+    const updatedAttrs = attrs.map((attr) =>
+      attr.code === editingAttr ? { ...attr, ...values } : attr
     );
-    setAttributes(updatedAttributes);
-    setEditing(null);
+    setAttrs(updatedAttrs);
+    setEditingAttr(null);
     form.resetFields();
+    message.success("Attribute updated");
   };
 
-  const renderValueInput = (type: AttributeType) => {
+  const renderValueInput = (type: AttrType) => {
     switch (type) {
       case "number":
         return <InputNumber style={{ width: "100%" }} />;
@@ -148,96 +147,99 @@ const AttributeEditor: React.FC<AttributeEditorProps> = ({
           alignItems: "center",
         }}
       >
-        <Title level={4}>Product Attributes</Title>
+        <Title level={4}>Item Attributes</Title>
         <Space>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddAttribute}
-          >
+          <Button type="primary" icon={<PlusOutlined />} onClick={addNewAttr}>
             Add Attribute
           </Button>
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            onClick={handleSave}
-            loading={saving}
+            onClick={saveChanges}
+            loading={isSaving}
           >
             Save All
           </Button>
         </Space>
       </div>
 
-      {attributes.length === 0 ? (
-        <Text type="secondary">No attributes defined for this product.</Text>
+      {attrs.length === 0 ? (
+        <Text type="secondary">No attributes defined for this item.</Text>
       ) : (
         <>
-          {attributes.map((attribute) => (
+          {attrs.map((attr) => (
             <Card
-              key={attribute.code}
+              key={attr.code}
               style={{ marginBottom: 16 }}
               title={
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <span>
-                    {attribute.label || attribute.code}
+                    {attr.label || attr.code}
                     <Text type="secondary" style={{ marginLeft: 8 }}>
-                      ({attribute.type})
+                      ({attr.type})
                     </Text>
                   </span>
                   <Space>
-                    <Button
-                      type="text"
-                      onClick={() => startEditing(attribute.code)}
-                    >
+                    <Button type="text" onClick={() => beginEdit(attr.code)}>
                       Edit
                     </Button>
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleDeleteAttribute(attribute.code)}
-                    />
+
+                    {/* Using Popconfirm instead of Modal */}
+                    <Popconfirm
+                      title="Delete Attribute"
+                      description={`Are you sure you want to delete "${attr.code}"?`}
+                      icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+                      onConfirm={() => handleDeleteConfirm(attr.code)}
+                      onCancel={handleDeleteCancel}
+                      okText="Yes, Delete"
+                      cancelText="Cancel"
+                      okButtonProps={{ danger: true }}
+                    >
+                      <Button type="text" danger icon={<DeleteOutlined />}>
+                        Delete
+                      </Button>
+                    </Popconfirm>
                   </Space>
                 </div>
               }
             >
               <div>
                 <Text strong>Code: </Text>
-                <Text>{attribute.code}</Text>
+                <Text>{attr.code}</Text>
               </div>
 
-              {attribute.label && (
+              {attr.label && (
                 <div>
                   <Text strong>Label: </Text>
-                  <Text>{attribute.label}</Text>
+                  <Text>{attr.label}</Text>
                 </div>
               )}
 
               <div>
                 <Text strong>Value: </Text>
                 <Text>
-                  {attribute.type === "boolean"
-                    ? attribute.value
+                  {attr.type === "boolean"
+                    ? attr.value
                       ? "Yes"
                       : "No"
-                    : attribute.type === "tags" &&
-                      Array.isArray(attribute.value)
-                    ? attribute.value.join(", ")
-                    : String(attribute.value || "")}
+                    : attr.type === "tags" && Array.isArray(attr.value)
+                    ? attr.value.join(", ")
+                    : String(attr.value || "")}
                 </Text>
               </div>
             </Card>
           ))}
         </>
       )}
+
       <Modal
         title="Edit Attribute"
-        open={!!editing}
-        onCancel={cancelEditing}
+        open={!!editingAttr}
+        onCancel={cancelEdit}
         footer={[
-          <Button key="cancel" onClick={cancelEditing}>
+          <Button key="cancel" onClick={cancelEdit}>
             Cancel
           </Button>,
           <Button key="submit" type="primary" onClick={() => form.submit()}>
@@ -245,10 +247,10 @@ const AttributeEditor: React.FC<AttributeEditorProps> = ({
           </Button>,
         ]}
       >
-        <Form<AttributeFormValues>
+        <Form<AttrFormValues>
           form={form}
           layout="vertical"
-          onFinish={updateAttribute}
+          onFinish={updateAttr}
         >
           <Form.Item
             name="code"
@@ -258,9 +260,9 @@ const AttributeEditor: React.FC<AttributeEditorProps> = ({
               {
                 validator: (_, value) => {
                   if (
-                    editing &&
-                    value !== editing &&
-                    attributes.some((attr) => attr.code === value)
+                    editingAttr &&
+                    value !== editingAttr &&
+                    attrs.some((attr) => attr.code === value)
                   ) {
                     return Promise.reject("Attribute code must be unique");
                   }
@@ -310,4 +312,4 @@ const AttributeEditor: React.FC<AttributeEditorProps> = ({
   );
 };
 
-export default AttributeEditor;
+export default EditAttributes;

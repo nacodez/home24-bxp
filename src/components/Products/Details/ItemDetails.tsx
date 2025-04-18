@@ -1,101 +1,39 @@
-import React, { useState, useEffect } from "react";
-import {
-  Descriptions,
-  Divider,
-  Spin,
-  Typography,
-  Card,
-  Button,
-  message,
-} from "antd";
+import React from "react";
+import { Descriptions, Divider, Typography, Card, Button } from "antd";
 import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useProducts } from "../../../hooks/useItems";
 import { useCategories } from "../../../hooks/useCategories";
-import ProductAttributes from "../Attributes/ProductAttributes";
-import { Product } from "../../../types/item.types";
+import ProdProps from "../Attributes/ItemProperties";
+import { Item } from "../../../types/item.types";
 
 const { Title } = Typography;
 
-interface ProductDetailsProps {
+interface ItemDetailsProps {
+  item?: Item;
   editMode?: boolean;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({
+const ItemDetails: React.FC<ItemDetailsProps> = ({
+  item,
   editMode = false,
 }) => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { getProductById } = useProducts();
-  const { categories } = useCategories();
+  const nav = useNavigate();
+  const { cats } = useCategories();
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        if (id) {
-          setLoading(true);
-          setError(null);
-          const productData = await getProductById(parseInt(id));
-          setProduct(productData);
-        }
-      } catch (err) {
-        console.error(`Error fetching product:`, err);
-        const errorMessage =
-          err instanceof Error ? err.message : "Unknown error occurred";
-        setError(`Failed to load product. ${errorMessage}`);
-        message.error(`Failed to load product: ${errorMessage}`);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (!item) {
+    return null;
+  }
 
-    fetchProduct();
-  }, [id, getProductById]);
-
-  const getCategoryName = (categoryId: number) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category ? category.name : "Unknown";
+  const getCatName = (catId: number) => {
+    const cat = cats.find((c) => c.id === catId);
+    return cat ? cat.name : "Unknown";
   };
-
-  if (loading) {
-    return (
-      <div style={{ textAlign: "center", padding: "50px" }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div>
-        <Title level={4} style={{ color: "red" }}>
-          Error: {error}
-        </Title>
-        <Button type="primary" onClick={() => navigate("/products")}>
-          Back to Products
-        </Button>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div>
-        <Title level={4}>Product not found</Title>
-        <Button type="primary" onClick={() => navigate("/products")}>
-          Back to Products
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => nav(-1)}>
           Back
         </Button>
       </div>
@@ -109,7 +47,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
               alignItems: "center",
             }}
           >
-            <Title level={3}>{product.name}</Title>
+            <Title level={3}>{item.name}</Title>
             {!editMode && (
               <Link to={`/products/${id}/edit`}>
                 <Button type="primary" icon={<EditOutlined />}>
@@ -121,23 +59,23 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         }
       >
         <Descriptions bordered column={2}>
-          <Descriptions.Item label="ID">{product.id}</Descriptions.Item>
-          <Descriptions.Item label="Name">{product.name}</Descriptions.Item>
+          <Descriptions.Item label="ID">{item.id}</Descriptions.Item>
+          <Descriptions.Item label="Name">{item.name}</Descriptions.Item>
           <Descriptions.Item label="Category">
-            {getCategoryName(product.category_id)}
+            {getCatName(item.category_id)}
           </Descriptions.Item>
           <Descriptions.Item label="Last Modified">
-            {product.last_modified
-              ? new Date(product.last_modified).toLocaleString()
+            {item.last_modified
+              ? new Date(item.last_modified).toLocaleString()
               : "N/A"}
           </Descriptions.Item>
         </Descriptions>
 
-        <Divider orientation="left">Product Attributes</Divider>
-        <ProductAttributes attributes={product.attributes} readOnly />
+        <Divider orientation="left">Item Attributes</Divider>
+        <ProdProps attributes={item.attributes} readOnly />
       </Card>
     </div>
   );
 };
 
-export default ProductDetails;
+export default ItemDetails;

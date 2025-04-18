@@ -1,53 +1,75 @@
 import { useState, useEffect } from 'react';
 import { Category } from '../types/category.types';
-import { fetchCategories } from '../api/categoryApi';
+import { fetchCategories } from '../api/categoryFetcher';
+
+interface CatWithChildren extends Category {
+    children: CatWithChildren[];
+}
 
 export const useCategories = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [cats, setCats] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState<string | null>(null);
 
     useEffect(() => {
-        const loadCategories = async () => {
-            setIsLoading(true);
-            setError(null);
+        const getCats = async () => {
+            setLoading(true);
+            setErr(null);
 
             try {
                 const data = await fetchCategories();
-                setCategories(data);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch categories');
+                setCats(data);
+            } catch (error) {
+                setErr(error instanceof Error ? error.message : 'Failed to fetch categories');
             } finally {
-                setIsLoading(false);
+                setLoading(false);
             }
         };
 
-        loadCategories();
+        getCats();
     }, []);
-    const getCategoryTree = () => {
-        const categoryMap = new Map<number, Category & { children: Category[] }>();
 
-        categories.forEach(category => {
-            categoryMap.set(category.id, { ...category, children: [] });
+    const buildCatTree = (): CatWithChildren[] => {
+
+        const catMap = new Map<number, CatWithChildren>();
+
+        cats.forEach(cat => {
+            const id = typeof cat.id === 'string' ? parseInt(cat.id) : cat.id;
+            catMap.set(id, { ...cat, children: [] } as CatWithChildren);
         });
 
-        const rootCategories: (Category & { children: Category[] })[] = [];
+        const rootCats: CatWithChildren[] = [];
 
-        categoryMap.forEach(category => {
-            if (category.parent_id && categoryMap.has(category.parent_id)) {
-                categoryMap.get(category.parent_id)?.children.push(category);
+        cats.forEach(cat => {
+            const id = typeof cat.id === 'string' ? parseInt(cat.id) : cat.id;
+            const catWithChildren = catMap.get(id);
+
+            if (!catWithChildren) return;
+
+            if (cat.parent_id) {
+                const parentId = typeof cat.parent_id === 'string' ?
+                    parseInt(cat.parent_id) : cat.parent_id;
+
+                const parent = catMap.get(parentId);
+
+                if (parent) {
+
+                    parent.children.push(catWithChildren);
+                } else {
+                    rootCats.push(catWithChildren);
+                }
             } else {
-                rootCategories.push(category);
+
+                rootCats.push(catWithChildren);
             }
         });
-
-        return rootCategories;
+        return rootCats;
     };
 
     return {
-        categories,
-        categoryTree: getCategoryTree(),
-        isLoading,
-        error
+        cats,
+        catTree: buildCatTree(),
+        loading,
+        err
     };
 };

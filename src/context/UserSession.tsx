@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { AuthState, User, LoginCredentials } from "../types/user.types";
+import { UserState, User, LoginCreds } from "../types/user.types";
 
-export const initialState: AuthState = {
+export const initialState: UserState = {
   user: null,
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
@@ -9,30 +9,30 @@ export const initialState: AuthState = {
   error: null,
 };
 
-export type AuthAction =
-  | { type: "LOGIN_REQUEST" }
-  | { type: "LOGIN_SUCCESS"; payload: { user: User; token: string } }
-  | { type: "LOGIN_FAILURE"; payload: string }
+export type UserAction =
+  | { type: "LOGIN_START" }
+  | { type: "LOGIN_OK"; payload: { user: User; token: string } }
+  | { type: "LOGIN_ERR"; payload: string }
   | { type: "LOGOUT" };
 
-export type AuthContextType = {
-  state: AuthState;
-  login: (credentials: LoginCredentials) => Promise<void>;
+export type UserContextType = {
+  state: UserState;
+  login: (creds: LoginCreds) => Promise<void>;
   logout: () => void;
 };
 
-export const authReducer = (
-  state: AuthState,
-  action: AuthAction
-): AuthState => {
+export const userReducer = (
+  state: UserState,
+  action: UserAction
+): UserState => {
   switch (action.type) {
-    case "LOGIN_REQUEST":
+    case "LOGIN_START":
       return {
         ...state,
         isLoading: true,
         error: null,
       };
-    case "LOGIN_SUCCESS":
+    case "LOGIN_OK":
       return {
         ...state,
         isLoading: false,
@@ -41,7 +41,7 @@ export const authReducer = (
         token: action.payload.token,
         error: null,
       };
-    case "LOGIN_FAILURE":
+    case "LOGIN_ERR":
       return {
         ...state,
         isLoading: false,
@@ -62,7 +62,7 @@ export const authReducer = (
   }
 };
 
-export const AuthContext = createContext<AuthContextType>({
+export const UserContext = createContext<UserContextType>({
   state: initialState,
   login: async () => {},
   logout: () => {},

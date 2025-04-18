@@ -6,21 +6,21 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { useAuth } from "../../hooks/useAuth";
+import { useUser } from "../../hooks/useUser";
 import type { MenuProps } from "antd";
 
-const { Header: AntHeader } = Layout;
+const { Header } = Layout;
 const { Text } = Typography;
 
-interface HeaderProps {
+interface TopBarProps {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
-  const { state, logout } = useAuth();
+const TopBar: React.FC<TopBarProps> = ({ collapsed, setCollapsed }) => {
+  const { state, logout } = useUser();
 
-  const menuItems: MenuProps["items"] = [
+  const userMenuItems: MenuProps["items"] = [
     {
       key: "logout",
       icon: <LogoutOutlined />,
@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
   ];
 
   return (
-    <AntHeader
+    <Header
       style={{
         padding: "0 16px",
         background: "#fff",
@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
 
       <Space>
         {state.user && (
-          <Dropdown menu={{ items: menuItems }} placement="bottomRight">
+          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Space style={{ cursor: "pointer" }}>
               <Avatar icon={<UserOutlined />} />
               <Text strong>{state.user.name}</Text>
@@ -57,8 +57,8 @@ const Header: React.FC<HeaderProps> = ({ collapsed, setCollapsed }) => {
           </Dropdown>
         )}
       </Space>
-    </AntHeader>
+    </Header>
   );
 };
 
-export default Header;
+export default TopBar;

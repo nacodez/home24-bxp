@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 
-// Check if firebase config is available
 const hasFirebaseConfig = import.meta.env.VITE_FIREBASE_API_KEY &&
     import.meta.env.VITE_FIREBASE_AUTH_DOMAIN &&
     import.meta.env.VITE_FIREBASE_PROJECT_ID;
@@ -24,7 +23,7 @@ if (hasFirebaseConfig) {
         const app = initializeApp(firebaseConfig);
         auth = getAuth(app);
         db = getFirestore(app);
-        console.log("Firebase initialized successfully");
+        console.info("Firebase initialized successfully");
     } catch (error) {
         console.warn("Firebase initialization failed:", error);
     }

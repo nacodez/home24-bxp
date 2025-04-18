@@ -14,7 +14,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => jest.fn(),
 }));
 
-const mockUseProducts = productsHook.useProducts as jest.Mock;
+const mockUseProducts = productsHook.useItems as jest.Mock;
 const mockUseCategories = categoriesHook.useCategories as jest.Mock;
 
 describe("ProductDetails Component", () => {

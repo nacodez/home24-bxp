@@ -5,98 +5,120 @@ import {
   ShoppingOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCategories } from "../../hooks/useCategories";
 import { Category } from "../../types/category.types";
 import type { MenuProps } from "antd";
 
 const { Sider } = Layout;
 
-type MenuItem = Required<MenuProps>["items"][number];
+type MenuItemType = Required<MenuProps>["items"][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
-interface SidebarProps {
+interface NavMenuProps {
   collapsed: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
-  const location = useLocation();
-  const { categoryTree, isLoading } = useCategories();
+interface CategoryWithChildren extends Category {
+  children: CategoryWithChildren[];
+}
 
-  const getSelectedKeys = () => {
-    const path = location.pathname;
-    if (path.startsWith("/products")) {
+const NavMenu: React.FC<NavMenuProps> = ({ collapsed }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { catTree, loading } = useCategories();
+
+  const handleMenuClick: MenuProps["onClick"] = (info) => {
+    const { key } = info;
+
+    if (key === "dashboard") {
+      navigate("/", { replace: true });
+    } else if (key === "products") {
+      navigate("/products", { replace: true });
+    } else if (key.startsWith("cat-")) {
+      const matches = key.match(/cat-(\d+)(?:-all)?/);
+      if (matches && matches[1]) {
+        const catId = matches[1];
+        navigate(`/products?categoryId=${catId}`, { replace: true });
+      }
+    }
+  };
+
+  const getSelectedKeys = (): string[] => {
+    const params = new URLSearchParams(location.search);
+    const categoryId = params.get("categoryId");
+
+    if (location.pathname === "/") {
+      return ["dashboard"];
+    }
+
+    if (location.pathname.startsWith("/products")) {
+      if (categoryId) {
+        return [`cat-${categoryId}`];
+      }
       return ["products"];
     }
-    if (path.startsWith("/categories")) {
-      return ["categories"];
-    }
+
     return ["dashboard"];
   };
 
-  const buildCategoryMenuItems = (
-    categories: (Category & { children: Category[] })[]
-  ): MenuItem[] => {
-    return categories.map((category) => {
-      if (category.children && category.children.length > 0) {
-        const childItems: MenuItem[] = [
-          getItem(
-            <Link to={`/products?categoryId=${category.id}`}>
-              All {category.name} Products
-            </Link>,
-            `category-${category.id}-products`
-          ),
-          ...buildCategoryMenuItems(
-            category.children as (Category & { children: Category[] })[]
-          ),
-        ];
+  const buildCategoryItems = (): MenuItemType[] => {
+    if (loading || !catTree || catTree.length === 0) {
+      return [];
+    }
 
-        return getItem(
-          category.name,
-          `category-${category.id}`,
-          <AppstoreOutlined />,
-          childItems
-        );
-      }
+    const buildItems = (categories: CategoryWithChildren[]): MenuItemType[] => {
+      return categories.map((cat) => {
+        const catId = typeof cat.id === "string" ? cat.id : cat.id.toString();
+        const key = `cat-${catId}`;
+        const hasChildren = cat.children && cat.children.length > 0;
 
-      return getItem(
-        <Link to={`/products?categoryId=${category.id}`}>{category.name}</Link>,
-        `category-${category.id}`,
-        <AppstoreOutlined />
-      );
-    });
+        if (hasChildren) {
+          return {
+            key,
+            label: cat.name,
+            icon: <AppstoreOutlined />,
+            children: [
+              {
+                key: `cat-${catId}-all`,
+                label: `All ${cat.name}`,
+                onClick: () => {
+                  navigate(`/products?categoryId=${catId}`, { replace: true });
+                  return false;
+                },
+              },
+
+              ...buildItems(cat.children),
+            ],
+          };
+        }
+        return {
+          key,
+          label: cat.name,
+          icon: <AppstoreOutlined />,
+        };
+      });
+    };
+
+    return buildItems(catTree as CategoryWithChildren[]);
   };
 
-  const items: MenuItem[] = [
-    getItem(<Link to="/">Dashboard</Link>, "dashboard", <DashboardOutlined />),
-    getItem(
-      <Link to="/products">All Products</Link>,
-      "products",
-      <ShoppingOutlined />
-    ),
-    getItem(
-      "Categories",
-      "categories",
-      <AppstoreOutlined />,
-      !isLoading
-        ? buildCategoryMenuItems(
-            categoryTree as (Category & { children: Category[] })[]
-          )
-        : []
-    ),
+  const menuItems: MenuItemType[] = [
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: <DashboardOutlined />,
+    },
+    {
+      key: "products",
+      label: "All Products",
+      icon: <ShoppingOutlined />,
+    },
+    {
+      key: "categories",
+      label: "Categories",
+      icon: <AppstoreOutlined />,
+      children: buildCategoryItems(),
+    },
   ];
 
   return (
@@ -140,11 +162,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         mode="inline"
         selectedKeys={getSelectedKeys()}
         defaultOpenKeys={["categories"]}
-        style={{ borderRight: 0 }}
-        items={items}
+        items={menuItems}
+        onClick={handleMenuClick}
       />
     </Sider>
   );
 };
 
-export default Sidebar;
+export default NavMenu;

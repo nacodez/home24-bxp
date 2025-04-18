@@ -1,8 +1,8 @@
-import { Product, AttributeValue } from '../types/item.types';
+import { Item, AttrVal } from '../types/item.types';
 import { Category } from '../types/category.types';
 
 // Mock products data
-export const mockProducts: Product[] = [
+export const mockProducts: Item[] = [
     {
         id: 1,
         name: 'Test Product 1',
@@ -47,7 +47,7 @@ export const mockCategories: Category[] = [
 ];
 
 // Mock attributes
-export const mockAttributes: AttributeValue[] = [
+export const mockAttributes: AttrVal[] = [
     {
         code: 'color',
         value: 'Red',
@@ -80,7 +80,6 @@ export const mockAttributes: AttributeValue[] = [
     }
 ];
 
-// Mock API response for product list
 export const mockProductsResponse = {
     products: mockProducts,
     total: 2

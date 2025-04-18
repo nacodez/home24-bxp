@@ -7,7 +7,7 @@ server.use(middlewares);
 
 server.use(jsonServer.bodyParser);
 
-// Simulate a login endpoint
+// login endpoint simulation
 server.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -31,6 +31,6 @@ server.use("/api", router);
 
 const PORT = 3001;
 server.listen(PORT, () => {
-  console.log(`JSON Server is running on port ${PORT}`);
-  console.log(`Home24 BXP API is available at http://localhost:${PORT}/api`);
+  console.info(`JSON Server is running on port ${PORT}`);
+  console.info(`Home24 BXP API is running on http://localhost:${PORT}/api`);
 });

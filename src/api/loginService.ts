@@ -6,35 +6,35 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { auth, isFirebaseAvailable } from '../firebase/config';
-import { User, LoginCredentials } from '../types/user.types';
+import { User, LoginCreds } from '../types/user.types';
 
-export const login = async (credentials: LoginCredentials): Promise<{ user: User, token: string }> => {
+export const doLogin = async (creds: LoginCreds): Promise<{ user: User, token: string }> => {
     try {
-        // Special case for demo user - always works regardless of Firebase configuration
-        if (credentials.email === 'demo@home24.de' && credentials.password === 'password') {
-            const demoUser: User = {
+        // Hardcoded Demo user for testing purpose
+        if (creds.email === 'demo@home24.de' && creds.password === 'password') {
+            const demoUsr: User = {
                 id: 'demo-user-id',
                 email: 'demo@home24.de',
                 name: 'Demo User'
             };
-            return { user: demoUser, token: 'demo-token-123456' };
+            return { user: demoUsr, token: 'demo-token-123456' };
         }
 
         if (isFirebaseAvailable && auth) {
-            // Regular Firebase authentication for other users
-            const firebaseAuth = auth as Auth; // Cast to Auth type to satisfy TypeScript
-            const userCredential: UserCredential = await signInWithEmailAndPassword(
-                firebaseAuth,
-                credentials.email,
-                credentials.password
+            // Regular Firebase authentication for non-demo users
+            const fbAuth = auth as Auth;
+            const userCred: UserCredential = await signInWithEmailAndPassword(
+                fbAuth,
+                creds.email,
+                creds.password
             );
 
-            const token = await userCredential.user.getIdToken();
+            const token = await userCred.user.getIdToken();
 
             const user: User = {
-                id: userCredential.user.uid,
-                email: userCredential.user.email || '',
-                name: userCredential.user.displayName || credentials.email.split('@')[0]
+                id: userCred.user.uid,
+                email: userCred.user.email || '',
+                name: userCred.user.displayName || creds.email.split('@')[0]
             };
 
             return { user, token };
@@ -49,19 +49,18 @@ export const login = async (credentials: LoginCredentials): Promise<{ user: User
     }
 };
 
-export const logout = async (): Promise<void> => {
+export const doLogout = async (): Promise<void> => {
     try {
-        const demoUserEmail = localStorage.getItem('user') ?
+        const demoEmail = localStorage.getItem('user') ?
             JSON.parse(localStorage.getItem('user') || '{}').email : '';
 
-        if (!demoUserEmail || demoUserEmail === 'demo@home24.de') {
+        if (!demoEmail || demoEmail === 'demo@home24.de') {
             return;
         }
 
-
         if (isFirebaseAvailable && auth && auth.currentUser) {
-            const firebaseAuth = auth as Auth;
-            await signOut(firebaseAuth);
+            const fbAuth = auth as Auth;
+            await signOut(fbAuth);
         }
     } catch (error) {
         if (error instanceof FirebaseError) {

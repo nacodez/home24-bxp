@@ -1,89 +1,84 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Statistic, Typography, List, Spin } from "antd";
 import { ShoppingOutlined, AppstoreOutlined } from "@ant-design/icons";
-import MainLayout from "../components/Layout/AppLayout";
+import AppLayout from "../components/Layout/AppLayout";
 import { useCategories } from "../hooks/useCategories";
 import { Link } from "react-router-dom";
-import { get } from "../api/httpService";
-import { Product } from "../types/item.types";
+import { getStuff } from "../api/httpService";
+import { Item } from "../types/item.types";
 
 const { Title } = Typography;
 
-interface CategoryStat {
+interface CatStat {
   id: number;
   name: string;
   count: number;
 }
 
-const DashboardPage: React.FC = () => {
-  const { categories } = useCategories();
+const HomePage: React.FC = () => {
+  const { cats } = useCategories();
   const [loading, setLoading] = useState(true);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [topCategories, setTopCategories] = useState<CategoryStat[]>([]);
+  const [allItems, setAllItems] = useState<Item[]>([]);
+  const [topCats, setTopCats] = useState<CatStat[]>([]);
 
   useEffect(() => {
-    const fetchAllProducts = async () => {
+    const getAllItems = async () => {
       try {
         setLoading(true);
-        const products = await get<Product[]>("/products");
-        setAllProducts(products);
+        const products = await getStuff<Item[]>("/products");
+        setAllItems(products);
 
-        const categoryCounts = new Map<number, number>();
+        const catCounts = new Map<number, number>();
 
-        products.forEach((product) => {
-          if (product && product.category_id !== undefined) {
-            const categoryId =
-              typeof product.category_id === "string"
-                ? parseInt(product.category_id)
-                : product.category_id;
+        products.forEach((prod) => {
+          if (prod && prod.category_id !== undefined) {
+            const catId =
+              typeof prod.category_id === "string"
+                ? parseInt(prod.category_id)
+                : prod.category_id;
 
-            const currentCount = categoryCounts.get(categoryId) || 0;
-            categoryCounts.set(categoryId, currentCount + 1);
+            const curCount = catCounts.get(catId) || 0;
+            catCounts.set(catId, curCount + 1);
           }
         });
 
-        const categoryStats = categories.map((category) => {
-          const categoryId =
-            typeof category.id === "string"
-              ? parseInt(category.id)
-              : category.id;
+        const stats = cats.map((cat) => {
+          const catId = typeof cat.id === "string" ? parseInt(cat.id) : cat.id;
 
           return {
-            id: categoryId,
-            name: category.name,
-            count: categoryCounts.get(categoryId) || 0,
+            id: catId,
+            name: cat.name,
+            count: catCounts.get(catId) || 0,
           };
         });
 
-        setTopCategories(
-          categoryStats.sort((a, b) => b.count - a.count).slice(0, 5)
-        );
-      } catch (error) {
-        console.error("Failed to fetch products for dashboard", error);
+        setTopCats(stats.sort((a, b) => b.count - a.count).slice(0, 5));
+      } catch (err) {
+        console.error("Failed to fetch products for dashboard", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (categories.length > 0) {
-      fetchAllProducts();
+    if (cats.length > 0) {
+      getAllItems();
     }
-  }, [categories]);
+  }, [cats]);
 
   if (loading) {
     return (
-      <MainLayout>
+      <AppLayout>
         <div
           style={{ display: "flex", justifyContent: "center", padding: "50px" }}
         >
           <Spin size="large" />
         </div>
-      </MainLayout>
+      </AppLayout>
     );
   }
 
   return (
-    <MainLayout>
+    <AppLayout>
       <Title level={2}>Dashboard</Title>
 
       <Row gutter={16} style={{ marginBottom: 20 }}>
@@ -91,7 +86,7 @@ const DashboardPage: React.FC = () => {
           <Card>
             <Statistic
               title="Total Products"
-              value={allProducts.length}
+              value={allItems.length}
               prefix={<ShoppingOutlined />}
             />
           </Card>
@@ -100,7 +95,7 @@ const DashboardPage: React.FC = () => {
           <Card>
             <Statistic
               title="Total Categories"
-              value={categories.length}
+              value={cats.length}
               prefix={<AppstoreOutlined />}
             />
           </Card>
@@ -109,7 +104,7 @@ const DashboardPage: React.FC = () => {
 
       <Card title="Top Categories">
         <List
-          dataSource={topCategories}
+          dataSource={topCats}
           renderItem={(item) => (
             <List.Item
               actions={[
@@ -126,8 +121,8 @@ const DashboardPage: React.FC = () => {
           )}
         />
       </Card>
-    </MainLayout>
+    </AppLayout>
   );
 };
 
-export default DashboardPage;
+export default HomePage;

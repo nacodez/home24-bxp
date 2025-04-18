@@ -9,9 +9,9 @@ import {
   Pagination,
 } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Link, useSearchParams } from "react-router-dom";
-import { Product } from "../../types/item.types";
-import { useProducts } from "../../hooks/useItems";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
+import { Item } from "../../types/item.types";
+import { useItems } from "../../hooks/useItems";
 import { useCategories } from "../../hooks/useCategories";
 import { TablePaginationConfig } from "antd/es/table";
 import { ColumnsType } from "antd/es/table";
@@ -20,11 +20,12 @@ import { SorterResult } from "antd/es/table/interface";
 const { Title } = Typography;
 const { Option } = Select;
 
-const ProductList: React.FC = () => {
+const ItemGrid: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [curPage, setCurPage] = useState(1);
+  const location = useLocation();
 
-  const categoryId = searchParams.get("categoryId")
+  const catId = searchParams.get("categoryId")
     ? parseInt(searchParams.get("categoryId") as string)
     : undefined;
 
@@ -32,34 +33,52 @@ const ProductList: React.FC = () => {
     ? parseInt(searchParams.get("_page") as string)
     : 1;
 
-  const pageSize = searchParams.get("_limit")
+  const limit = searchParams.get("_limit")
     ? parseInt(searchParams.get("_limit") as string)
     : 10;
 
-  const sortField = searchParams.get("_sort") || "";
-  const sortDirection = (searchParams.get("_order") as "asc" | "desc") || "asc";
+  const sortBy = searchParams.get("_sort") || "";
+  const sortDir = (searchParams.get("_order") as "asc" | "desc") || "asc";
 
-  const initialFilter = {
-    categoryId,
+  const initFilter = {
+    categoryId: catId,
     page,
-    pageSize,
-    sort: sortField
-      ? { field: sortField as keyof Product, direction: sortDirection }
+    pageSize: limit,
+    sort: sortBy
+      ? { field: sortBy as keyof Item, direction: sortDir }
       : undefined,
   };
 
-  const { categories } = useCategories();
-  const { products, total, isLoading, filter, setFilter } =
-    useProducts(initialFilter);
+  const { cats } = useCategories();
+  const { items, total, loading, filter, setFilter } = useItems(initFilter);
 
   useEffect(() => {
-    setCurrentPage(filter.page);
+    const params = new URLSearchParams(location.search);
+    const urlCategoryId = params.get("categoryId");
+
+    if (
+      (urlCategoryId &&
+        (!filter.categoryId ||
+          urlCategoryId !== filter.categoryId.toString())) ||
+      (!urlCategoryId && filter.categoryId)
+    ) {
+      setFilter({
+        ...filter,
+        categoryId: urlCategoryId ? parseInt(urlCategoryId) : undefined,
+        page: 1,
+      });
+      setCurPage(1);
+    }
+  }, [location.search, filter, setFilter]);
+
+  useEffect(() => {
+    setCurPage(filter.page);
   }, [filter.page]);
 
   useEffect(() => {
     const newParams = new URLSearchParams();
 
-    if (filter.categoryId) {
+    if (filter.categoryId !== undefined) {
       newParams.set("categoryId", filter.categoryId.toString());
     }
 
@@ -71,40 +90,36 @@ const ProductList: React.FC = () => {
       newParams.set("_order", filter.sort.direction);
     }
 
-    const currentParamsString = searchParams.toString();
-    const newParamsString = newParams.toString();
+    setSearchParams(newParams, { replace: true });
+  }, [filter, setSearchParams]);
 
-    if (currentParamsString !== newParamsString) {
-      setSearchParams(newParams);
-    }
-  }, [filter, setSearchParams, searchParams]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const changePage = (pg: number) => {
+    setCurPage(pg);
 
     setFilter((prev) => ({
       ...prev,
-      page,
+      page: pg,
     }));
-
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("_page", page.toString());
-    setSearchParams(newParams);
   };
 
-  const handlePageSizeChange = (size: number) => {
+  const changePageSize = (size: number) => {
+    const startIndex = (curPage - 1) * filter.pageSize;
+
+    const newPage = Math.floor(startIndex / size) + 1;
+
+    setCurPage(newPage);
+
     setFilter((prev) => ({
       ...prev,
       pageSize: size,
-      page: 1,
+      page: newPage,
     }));
-    setCurrentPage(1);
   };
 
-  const handleSortChange = (
+  const handleSort = (
     _: TablePaginationConfig,
     _filters: Record<string, unknown>,
-    sorter: SorterResult<Product> | SorterResult<Product>[]
+    sorter: SorterResult<Item> | SorterResult<Item>[]
   ) => {
     if (!sorter || (Array.isArray(sorter) && sorter.length === 0)) {
       setFilter((prev) => ({
@@ -112,52 +127,63 @@ const ProductList: React.FC = () => {
         sort: undefined,
         page: 1,
       }));
-      setCurrentPage(1);
+      setCurPage(1);
       return;
     }
 
-    const singleSorter = !Array.isArray(sorter) ? sorter : sorter[0];
+    const theSorter = !Array.isArray(sorter) ? sorter : sorter[0];
 
-    if (!singleSorter.field) {
+    if (!theSorter.field) {
       setFilter((prev) => ({
         ...prev,
         sort: undefined,
         page: 1,
       }));
-      setCurrentPage(1);
+      setCurPage(1);
       return;
     }
 
-    const fieldName = singleSorter.field.toString();
+    const colName = theSorter.field.toString();
 
-    if (!singleSorter.order) {
+    if (!theSorter.order) {
       setFilter((prev) => ({
         ...prev,
         sort: undefined,
         page: 1,
       }));
-      setCurrentPage(1);
+      setCurPage(1);
       return;
     }
-    const direction = singleSorter.order === "ascend" ? "asc" : "desc";
+    const sortDir = theSorter.order === "ascend" ? "asc" : "desc";
 
     setFilter((prev) => ({
       ...prev,
       sort: {
-        field: fieldName as keyof Product,
-        direction: direction,
+        field: colName as keyof Item,
+        direction: sortDir,
       },
-      page: 1, // Reset to first page when changing sort
+      page: 1,
     }));
-    setCurrentPage(1);
+    setCurPage(1);
   };
 
-  const getCategoryName = (categoryId: number) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category ? category.name : "Unknown";
+  const getCatName = (catId: number) => {
+    const catIdStr = catId.toString();
+    const cat = cats.find((c) => c.id.toString() === catIdStr);
+
+    if (cat) {
+      return cat.name;
+    }
+
+    const catByNumber = cats.find((c) => {
+      const cId = typeof c.id === "string" ? parseInt(c.id) : c.id;
+      return cId === catId;
+    });
+
+    return catByNumber ? catByNumber.name : `Unknown (${catId})`;
   };
 
-  const columns: ColumnsType<Product> = [
+  const columns: ColumnsType<Item> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -189,30 +215,32 @@ const ProductList: React.FC = () => {
       dataIndex: "category_id",
       key: "category_id",
       width: "20%",
-      render: (categoryId: number) => (
-        <Tag color="blue">{getCategoryName(categoryId)}</Tag>
-      ),
+      render: (catId: number) => {
+        const catName = getCatName(catId);
+        const isUnknown = catName.startsWith("Unknown");
+        return <Tag color={isUnknown ? "red" : "blue"}>{catName}</Tag>;
+      },
     },
     {
       title: "Attributes",
       key: "attributes",
       width: "20%",
-      render: (_, record: Product) => (
-        <span>{record.attributes.length} attributes</span>
+      render: (_, item: Item) => (
+        <span>{item.attributes.length} attributes</span>
       ),
     },
     {
       title: "Actions",
       key: "actions",
       width: "15%",
-      render: (_, record: Product) => (
+      render: (_, item: Item) => (
         <Space>
-          <Link to={`/products/${record.id}`}>
+          <Link to={`/products/${item.id}`}>
             <Button type="primary" icon={<EyeOutlined />} size="small">
               View
             </Button>
           </Link>
-          <Link to={`/products/${record.id}/edit`}>
+          <Link to={`/products/${item.id}/edit`}>
             <Button type="default" icon={<EditOutlined />} size="small">
               Edit
             </Button>
@@ -223,14 +251,14 @@ const ProductList: React.FC = () => {
   ];
 
   const getTitle = () => {
-    if (categoryId && categories.length > 0) {
-      const category = categories.find((c) => c.id === categoryId);
-      return `Products in ${category ? category.name : "Category"}`;
+    if (catId && cats.length > 0) {
+      const cat = cats.find((c) => c.id.toString() === catId.toString());
+      return `Products in ${cat ? cat.name : "Category"}`;
     }
     return "All Products";
   };
 
-  const getResponsiveStyles = () => {
+  const getStyles = () => {
     const isMobile = window.innerWidth < 768;
     return {
       container: {
@@ -241,43 +269,47 @@ const ProductList: React.FC = () => {
         alignItems: isMobile ? ("flex-start" as const) : ("center" as const),
         gap: "12px",
       },
-      selectContainer: {
+      selectBox: {
         width: isMobile ? "100%" : "auto",
       },
-      select: {
+      dropdown: {
         width: isMobile ? "100%" : 200,
       },
     };
   };
 
-  const styles = getResponsiveStyles();
+  const styles = getStyles();
 
   return (
     <div>
       <div style={styles.container}>
         <Title level={3}>{getTitle()}</Title>
 
-        <Space direction="vertical" style={styles.selectContainer}>
+        <Space direction="vertical" style={styles.selectBox}>
           <span>Category:</span>
           <Select
-            style={styles.select}
+            style={styles.dropdown}
             placeholder="Select a category"
-            value={categoryId}
+            value={catId}
             onChange={(value: number | undefined) => {
               setFilter((prev) => ({
                 ...prev,
                 categoryId: value,
                 page: 1,
               }));
-              setCurrentPage(1);
+              setCurPage(1);
             }}
             allowClear
           >
-            {categories.map((category) => (
-              <Option key={category.id} value={category.id}>
-                {category.name}
-              </Option>
-            ))}
+            {cats.map((cat) => {
+              const catIdValue =
+                typeof cat.id === "string" ? parseInt(cat.id) : cat.id;
+              return (
+                <Option key={cat.id} value={catIdValue}>
+                  {cat.name}
+                </Option>
+              );
+            })}
           </Select>
         </Space>
       </div>
@@ -285,8 +317,7 @@ const ProductList: React.FC = () => {
       <div style={{ marginBottom: 16 }}>
         <Space>
           <span>
-            Page {currentPage} of{" "}
-            {Math.max(1, Math.ceil(total / filter.pageSize))}
+            Page {curPage} of {Math.max(1, Math.ceil(total / filter.pageSize))}
           </span>
           <span>·</span>
           <span>Showing {filter.pageSize} per page</span>
@@ -304,13 +335,12 @@ const ProductList: React.FC = () => {
       <Table
         rowKey="id"
         columns={columns}
-        dataSource={products}
-        loading={isLoading}
+        dataSource={items}
+        loading={loading}
         pagination={false}
-        onChange={handleSortChange}
+        onChange={handleSort}
       />
 
-      {/* Add custom pagination control */}
       <div
         style={{
           marginTop: "16px",
@@ -319,18 +349,18 @@ const ProductList: React.FC = () => {
         }}
       >
         <Pagination
-          current={currentPage}
+          current={curPage}
           total={total}
           pageSize={filter.pageSize}
           showSizeChanger
           pageSizeOptions={["5", "10", "20", "50"]}
-          onChange={handlePageChange}
-          onShowSizeChange={handlePageSizeChange}
-          showTotal={(total) => `Total ${total} items`}
+          onChange={changePage}
+          onShowSizeChange={changePageSize}
+          showTotal={(ttl) => `Total ${ttl} items`}
         />
       </div>
     </div>
   );
 };
 
-export default ProductList;
+export default ItemGrid;

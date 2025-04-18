@@ -1,36 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import Header from "./TopBar";
-import Sidebar from "./NavMenu";
-import { LastModifiedProduct } from "../Products/RecentItem";
+import TopBar from "./TopBar";
+import NavMenu from "./NavMenu";
+import { RecentItem } from "../Products/RecentItem";
 
 const { Content } = Layout;
 
-interface MainLayoutProps {
+interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check screen size on mount and when resizing
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-
-      if (mobile && !collapsed) {
+    const checkScreen = () => {
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+      if (isMobileView && !collapsed) {
         setCollapsed(true);
       }
     };
 
-    checkMobile();
+    checkScreen();
 
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkScreen);
 
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkScreen);
   }, [collapsed]);
 
   return (
@@ -40,7 +38,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           collapsed && isMobile ? "hidden" : ""
         }`}
       >
-        <Sidebar collapsed={collapsed} />
+        <NavMenu collapsed={collapsed} />
       </div>
 
       <Layout
@@ -48,9 +46,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           isMobile ? "mobile" : ""
         }`}
       >
-        <Header collapsed={collapsed} setCollapsed={setCollapsed} />
+        <TopBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <Content style={{ margin: isMobile ? "8px" : "16px" }}>
-          <LastModifiedProduct />
+          <RecentItem />
           <div
             style={{
               padding: isMobile ? 16 : 24,
@@ -64,7 +62,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
         </Content>
 
-        {/* Mobile toggle button - only shown on mobile */}
+        {/* Mobile toggle button */}
         {isMobile && (
           <Button
             type="primary"
@@ -91,4 +89,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default AppLayout;

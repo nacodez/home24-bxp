@@ -1,23 +1,24 @@
 import React from "react";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthContext } from "../UserSession";
-import { AuthProvider } from "../SessionProvider";
+import { UserContext } from "../UserSession";
+import { UserProvider } from "../SessionProvider";
 import * as authApi from "../../api/loginService";
 
-// Mock the auth API
 jest.mock("../api/authApi", () => ({
   login: jest.fn(),
   logout: jest.fn().mockResolvedValue(undefined),
 }));
 
-const mockLoginFn = authApi.login as jest.MockedFunction<typeof authApi.login>;
-const mockLogoutFn = authApi.logout as jest.MockedFunction<
-  typeof authApi.logout
+const mockLoginFn = authApi.doLogin as jest.MockedFunction<
+  typeof authApi.doLogin
+>;
+const mockLogoutFn = authApi.doLogout as jest.MockedFunction<
+  typeof authApi.doLogout
 >;
 
 const TestComponent = () => {
-  const { state, login, logout } = React.useContext(AuthContext);
+  const { state, login, logout } = React.useContext(UserContext);
   return (
     <div>
       <div data-testid="auth-state">
@@ -44,9 +45,9 @@ describe("AuthContext", () => {
 
   test("provides the initial auth state", () => {
     render(
-      <AuthProvider>
+      <UserProvider>
         <TestComponent />
-      </AuthProvider>
+      </UserProvider>
     );
 
     expect(screen.getByTestId("auth-state")).toHaveTextContent(
@@ -64,9 +65,9 @@ describe("AuthContext", () => {
     mockLoginFn.mockResolvedValue({ user: mockUser, token: "test-token" });
 
     render(
-      <AuthProvider>
+      <UserProvider>
         <TestComponent />
-      </AuthProvider>
+      </UserProvider>
     );
 
     await act(async () => {
@@ -90,7 +91,6 @@ describe("AuthContext", () => {
   });
 
   test("updates state after logout", async () => {
-    // Mock initial authenticated state
     localStorage.setItem("token", "test-token");
     localStorage.setItem(
       "user",
@@ -102,26 +102,23 @@ describe("AuthContext", () => {
     );
 
     render(
-      <AuthProvider>
+      <UserProvider>
         <TestComponent />
-      </AuthProvider>
+      </UserProvider>
     );
 
-    // Should start authenticated due to localStorage values
     await waitFor(() => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Authenticated"
       );
     });
 
-    // Reset the mock to ensure we can verify it's called
     mockLogoutFn.mockClear();
 
     await act(async () => {
       userEvent.click(screen.getByText("Logout"));
     });
 
-    // Verify the logout API was called
     expect(mockLogoutFn).toHaveBeenCalled();
 
     await waitFor(() => {
@@ -131,7 +128,7 @@ describe("AuthContext", () => {
       expect(screen.getByTestId("user-email")).toHaveTextContent("No user");
     });
 
-    // Verify localStorage items were removed
+    // Verifying weather localStorage items removed
     expect(localStorage.removeItem).toHaveBeenCalledWith("token");
     expect(localStorage.removeItem).toHaveBeenCalledWith("user");
   });
@@ -140,16 +137,15 @@ describe("AuthContext", () => {
     mockLoginFn.mockRejectedValue(new Error("Invalid credentials"));
 
     render(
-      <AuthProvider>
+      <UserProvider>
         <TestComponent />
-      </AuthProvider>
+      </UserProvider>
     );
 
     await act(async () => {
       userEvent.click(screen.getByText("Login"));
     });
 
-    // State should remain unauthenticated
     await waitFor(() => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Not Authenticated"

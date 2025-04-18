@@ -2,26 +2,26 @@ import React from "react";
 import { Card, Typography, Tag, Space, Button } from "antd";
 import { ClockCircleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useLastModifiedProduct } from "../../hooks/useLastModifiedProduct";
+import { useRecentItem } from "../../hooks/useRecentItem";
 import { useCategories } from "../../hooks/useCategories";
 
 const { Text, Title } = Typography;
 
-export const LastModifiedProduct: React.FC = () => {
-  const { lastModifiedProduct } = useLastModifiedProduct();
-  const { categories } = useCategories();
+export const RecentItem: React.FC = () => {
+  const { recentItem } = useRecentItem();
+  const { cats } = useCategories();
 
-  if (!lastModifiedProduct) {
+  if (!recentItem) {
     return null;
   }
 
-  const getCategoryName = (categoryId: number) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category ? category.name : "Unknown";
+  const getCatName = (catId: number) => {
+    const cat = cats.find((c) => c.id === catId);
+    return cat ? cat.name : "Unknown";
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
     return date.toLocaleString();
   };
 
@@ -44,22 +44,20 @@ export const LastModifiedProduct: React.FC = () => {
           <Title level={5} style={{ marginBottom: 4 }}>
             Last Modified Product
           </Title>
-          <Text strong>{lastModifiedProduct.name}</Text>
+          <Text strong>{recentItem.name}</Text>
           <div style={{ marginTop: 8 }}>
             <Space>
-              <Tag color="blue">
-                {getCategoryName(lastModifiedProduct.category_id)}
-              </Tag>
-              {lastModifiedProduct.last_modified && (
+              <Tag color="blue">{getCatName(recentItem.category_id)}</Tag>
+              {recentItem.last_modified && (
                 <Text type="secondary">
                   <ClockCircleOutlined style={{ marginRight: 4 }} />
-                  {formatDate(lastModifiedProduct.last_modified)}
+                  {formatDate(recentItem.last_modified)}
                 </Text>
               )}
             </Space>
           </div>
         </div>
-        <Link to={`/products/${lastModifiedProduct.id}`}>
+        <Link to={`/products/${recentItem.id}`}>
           <Button type="primary" icon={<EyeOutlined />}>
             View
           </Button>
