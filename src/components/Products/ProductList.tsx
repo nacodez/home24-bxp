@@ -1,5 +1,13 @@
-import React, { useEffect } from "react";
-import { Table, Button, Select, Space, Typography, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  Button,
+  Select,
+  Space,
+  Typography,
+  Tag,
+  Pagination,
+} from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link, useSearchParams } from "react-router-dom";
 import { Product } from "../../types/product.types";
@@ -14,6 +22,7 @@ const { Option } = Select;
 
 const ProductList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const categoryId = searchParams.get("categoryId")
     ? parseInt(searchParams.get("categoryId") as string)
@@ -27,15 +36,25 @@ const ProductList: React.FC = () => {
     ? parseInt(searchParams.get("_limit") as string)
     : 10;
 
+  const sortField = searchParams.get("_sort") || "";
+  const sortDirection = (searchParams.get("_order") as "asc" | "desc") || "asc";
+
   const initialFilter = {
     categoryId,
     page,
     pageSize,
+    sort: sortField
+      ? { field: sortField as keyof Product, direction: sortDirection }
+      : undefined,
   };
 
   const { categories } = useCategories();
   const { products, total, isLoading, filter, setFilter } =
     useProducts(initialFilter);
+
+  useEffect(() => {
+    setCurrentPage(filter.page);
+  }, [filter.page]);
 
   useEffect(() => {
     const newParams = new URLSearchParams();
@@ -60,19 +79,26 @@ const ProductList: React.FC = () => {
     }
   }, [filter, setSearchParams, searchParams]);
 
-  const handlePageChange = (page: number, pageSize?: number) => {
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
     setFilter((prev) => ({
       ...prev,
       page,
-      pageSize: pageSize || prev.pageSize,
     }));
+
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("_page", page.toString());
+    setSearchParams(newParams);
   };
 
-  const handlePageSizeChange = (_: number, size: number) => {
+  const handlePageSizeChange = (size: number) => {
     setFilter((prev) => ({
       ...prev,
       pageSize: size,
+      page: 1,
     }));
+    setCurrentPage(1);
   };
 
   const handleSortChange = (
@@ -81,21 +107,49 @@ const ProductList: React.FC = () => {
     sorter: SorterResult<Product> | SorterResult<Product>[]
   ) => {
     if (!sorter || (Array.isArray(sorter) && sorter.length === 0)) {
+      setFilter((prev) => ({
+        ...prev,
+        sort: undefined,
+        page: 1,
+      }));
+      setCurrentPage(1);
       return;
     }
 
     const singleSorter = !Array.isArray(sorter) ? sorter : sorter[0];
 
-    if (!singleSorter.field) return;
+    if (!singleSorter.field) {
+      setFilter((prev) => ({
+        ...prev,
+        sort: undefined,
+        page: 1,
+      }));
+      setCurrentPage(1);
+      return;
+    }
 
     const fieldName = singleSorter.field.toString();
+
+    if (!singleSorter.order) {
+      setFilter((prev) => ({
+        ...prev,
+        sort: undefined,
+        page: 1,
+      }));
+      setCurrentPage(1);
+      return;
+    }
+    const direction = singleSorter.order === "ascend" ? "asc" : "desc";
+
     setFilter((prev) => ({
       ...prev,
       sort: {
-        field: fieldName as keyof Product | "",
-        direction: singleSorter.order === "ascend" ? "asc" : "desc",
+        field: fieldName as keyof Product,
+        direction: direction,
       },
+      page: 1, // Reset to first page when changing sort
     }));
+    setCurrentPage(1);
   };
 
   const getCategoryName = (categoryId: number) => {
@@ -215,6 +269,7 @@ const ProductList: React.FC = () => {
                 categoryId: value,
                 page: 1,
               }));
+              setCurrentPage(1);
             }}
             allowClear
           >
@@ -230,11 +285,19 @@ const ProductList: React.FC = () => {
       <div style={{ marginBottom: 16 }}>
         <Space>
           <span>
-            Page {filter.page} of{" "}
+            Page {currentPage} of{" "}
             {Math.max(1, Math.ceil(total / filter.pageSize))}
           </span>
           <span>·</span>
           <span>Showing {filter.pageSize} per page</span>
+          {filter.sort?.field && (
+            <>
+              <span>·</span>
+              <span>
+                Sorted by {filter.sort.field} ({filter.sort.direction})
+              </span>
+            </>
+          )}
         </Space>
       </div>
 
@@ -243,19 +306,29 @@ const ProductList: React.FC = () => {
         columns={columns}
         dataSource={products}
         loading={isLoading}
-        pagination={{
-          current: filter.page,
-          pageSize: filter.pageSize,
-          total,
-          showSizeChanger: true,
-          pageSizeOptions: ["5", "10", "20", "50"],
-          onChange: handlePageChange,
-          onShowSizeChange: handlePageSizeChange,
-          showTotal: (total) => `Total ${total} items`,
-          position: ["bottomRight"],
-        }}
+        pagination={false}
         onChange={handleSortChange}
       />
+
+      {/* Add custom pagination control */}
+      <div
+        style={{
+          marginTop: "16px",
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Pagination
+          current={currentPage}
+          total={total}
+          pageSize={filter.pageSize}
+          showSizeChanger
+          pageSizeOptions={["5", "10", "20", "50"]}
+          onChange={handlePageChange}
+          onShowSizeChange={handlePageSizeChange}
+          showTotal={(total) => `Total ${total} items`}
+        />
+      </div>
     </div>
   );
 };

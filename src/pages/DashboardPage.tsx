@@ -21,8 +21,6 @@ const DashboardPage: React.FC = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [topCategories, setTopCategories] = useState<CategoryStat[]>([]);
 
-  console.log(topCategories);
-
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
@@ -39,14 +37,10 @@ const DashboardPage: React.FC = () => {
                 ? parseInt(product.category_id)
                 : product.category_id;
 
-            console.log(`Product ${product.id} has category_id: ${categoryId}`);
-
             const currentCount = categoryCounts.get(categoryId) || 0;
             categoryCounts.set(categoryId, currentCount + 1);
           }
         });
-
-        console.log("Category counts:", Object.fromEntries(categoryCounts));
 
         const categoryStats = categories.map((category) => {
           const categoryId =
@@ -60,8 +54,6 @@ const DashboardPage: React.FC = () => {
             count: categoryCounts.get(categoryId) || 0,
           };
         });
-
-        console.log("Category stats before sorting:", categoryStats);
 
         setTopCategories(
           categoryStats.sort((a, b) => b.count - a.count).slice(0, 5)

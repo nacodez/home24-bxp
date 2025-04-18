@@ -21,7 +21,6 @@ export const apiRequest = async <T>(
         });
     }
 
-
     const headers = new Headers({
         'Content-Type': 'application/json',
         ...fetchOptions.headers,
@@ -36,27 +35,32 @@ export const apiRequest = async <T>(
         }
     }
 
-    const response = await fetch(url.toString(), {
-        ...fetchOptions,
-        headers,
-    });
+    try {
+        const response = await fetch(url.toString(), {
+            ...fetchOptions,
+            headers,
+        });
 
-    if (!response.ok) {
-        let errorMessage = `API Error: ${response.statusText}`;
-        try {
-            const errorData = await response.json();
-            errorMessage = errorData.message || errorMessage;
-        } catch {
-            errorMessage = `API Error: Server responded with ${response.status} ${response.statusText}, but returned invalid JSON`;
+        if (!response.ok) {
+            let errorMessage = `API Error: ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch {
+                errorMessage = `API Error: Server responded with ${response.status} ${response.statusText}, but returned invalid JSON`;
+            }
+            throw new Error(errorMessage);
         }
-        throw new Error(errorMessage);
-    }
 
-    const data = await response.json();
-    return data as T;
+        const data = await response.json();
+
+        return data as T;
+    } catch (error) {
+        console.error(`API Error for ${url.toString()}:`, error);
+        throw error;
+    }
 };
 
-// Specific HTTP method helpers
 export const get = <T>(endpoint: string, options: RequestOptions = {}): Promise<T> =>
     apiRequest<T>(endpoint, { ...options, method: 'GET' });
 

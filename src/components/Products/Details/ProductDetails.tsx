@@ -28,6 +28,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { getProductById } = useProducts();
   const { categories } = useCategories();
 
@@ -36,11 +37,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
       try {
         if (id) {
           setLoading(true);
+          setError(null);
           const productData = await getProductById(parseInt(id));
           setProduct(productData);
         }
-      } catch {
-        message.error("Failed to load product details");
+      } catch (err) {
+        console.error(`Error fetching product:`, err);
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error occurred";
+        setError(`Failed to load product. ${errorMessage}`);
+        message.error(`Failed to load product: ${errorMessage}`);
       } finally {
         setLoading(false);
       }
@@ -58,6 +64,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
         <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Title level={4} style={{ color: "red" }}>
+          Error: {error}
+        </Title>
+        <Button type="primary" onClick={() => navigate("/products")}>
+          Back to Products
+        </Button>
       </div>
     );
   }
