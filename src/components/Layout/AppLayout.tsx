@@ -38,7 +38,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           collapsed && isMobile ? "hidden" : ""
         }`}
       >
-        <NavMenu collapsed={collapsed} />
+        <NavMenu collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
       <Layout

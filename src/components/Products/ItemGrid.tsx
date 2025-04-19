@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   Button,
@@ -7,6 +7,8 @@ import {
   Typography,
   Tag,
   Pagination,
+  Empty,
+  Alert,
 } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link, useSearchParams, useLocation } from "react-router-dom";
@@ -23,11 +25,19 @@ const { Option } = Select;
 const ItemGrid: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [curPage, setCurPage] = useState(1);
+  const [hasNoProducts, setHasNoProducts] = useState(false);
+  const [categoryProductCounts, setCategoryProductCounts] = useState<
+    Record<number, number>
+  >({});
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const location = useLocation();
 
-  const catId = searchParams.get("categoryId")
-    ? parseInt(searchParams.get("categoryId") as string)
-    : undefined;
+  const catId =
+    searchParams.get("categoryId") || searchParams.get("categoryID")
+      ? parseInt(
+          searchParams.get("categoryId") || searchParams.get("categoryID") || ""
+        )
+      : undefined;
 
   const page = searchParams.get("_page")
     ? parseInt(searchParams.get("_page") as string)
@@ -53,29 +63,61 @@ const ItemGrid: React.FC = () => {
   const { items, total, loading, filter, setFilter } = useItems(initFilter);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlCategoryId = params.get("categoryId");
+    const getProductCounts = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/products");
+        const allProducts = await response.json();
 
-    if (
-      (urlCategoryId &&
-        (!filter.categoryId ||
-          urlCategoryId !== filter.categoryId.toString())) ||
-      (!urlCategoryId && filter.categoryId)
-    ) {
-      setFilter({
-        ...filter,
-        categoryId: urlCategoryId ? parseInt(urlCategoryId) : undefined,
-        page: 1,
-      });
-      setCurPage(1);
+        const counts: Record<number, number> = {};
+        allProducts.forEach((product: Item) => {
+          const catId = product.category_id;
+          counts[catId] = (counts[catId] || 0) + 1;
+        });
+
+        setCategoryProductCounts(counts);
+      } catch (error) {
+        console.error("Error fetching product counts:", error);
+      }
+    };
+
+    getProductCounts();
+  }, []);
+
+  useEffect(() => {
+    if (filter.categoryId && Object.keys(categoryProductCounts).length > 0) {
+      setHasNoProducts(
+        categoryProductCounts[filter.categoryId] === undefined ||
+          categoryProductCounts[filter.categoryId] === 0
+      );
+    } else {
+      setHasNoProducts(false);
     }
-  }, [location.search, filter, setFilter]);
+  }, [filter.categoryId, categoryProductCounts]);
+
+  useEffect(() => {
+    if (!isInitialLoad) return;
+
+    const urlCategoryId =
+      searchParams.get("categoryId") || searchParams.get("categoryID");
+
+    if (urlCategoryId) {
+      setFilter((prev) => ({
+        ...prev,
+        categoryId: parseInt(urlCategoryId),
+        page: page,
+      }));
+    }
+
+    setIsInitialLoad(false);
+  }, [isInitialLoad, searchParams, setFilter, page]);
 
   useEffect(() => {
     setCurPage(filter.page);
   }, [filter.page]);
 
   useEffect(() => {
+    if (isInitialLoad) return;
+
     const newParams = new URLSearchParams();
 
     if (filter.categoryId !== undefined) {
@@ -89,83 +131,103 @@ const ItemGrid: React.FC = () => {
       newParams.set("_sort", filter.sort.field.toString());
       newParams.set("_order", filter.sort.direction);
     }
+  }, [filter, setSearchParams, location.search, isInitialLoad]);
 
-    setSearchParams(newParams, { replace: true });
-  }, [filter, setSearchParams]);
+  const handlePaginationChange = useCallback(
+    (page: number, pageSize?: number) => {
+      if (pageSize && pageSize !== filter.pageSize) {
+        const startIndex = (curPage - 1) * filter.pageSize;
+        const newPage = Math.floor(startIndex / pageSize) + 1;
 
-  const changePage = (pg: number) => {
-    setCurPage(pg);
+        setCurPage(newPage);
+        setFilter((prev) => ({
+          ...prev,
+          pageSize: pageSize,
+          page: newPage,
+        }));
+      } else {
+        setCurPage(page);
+        setFilter((prev) => ({
+          ...prev,
+          page: page,
+        }));
+      }
+    },
+    [curPage, filter.pageSize, setFilter]
+  );
 
-    setFilter((prev) => ({
-      ...prev,
-      page: pg,
-    }));
-  };
+  const handleSort = useCallback(
+    (
+      _: TablePaginationConfig,
+      _filters: Record<string, unknown>,
+      sorter: SorterResult<Item> | SorterResult<Item>[]
+    ) => {
+      if (!sorter || (Array.isArray(sorter) && sorter.length === 0)) {
+        setFilter((prev) => ({
+          ...prev,
+          sort: undefined,
+          page: 1,
+        }));
+        setCurPage(1);
+        return;
+      }
 
-  const changePageSize = (size: number) => {
-    const startIndex = (curPage - 1) * filter.pageSize;
+      const theSorter = !Array.isArray(sorter) ? sorter : sorter[0];
 
-    const newPage = Math.floor(startIndex / size) + 1;
+      if (!theSorter.field) {
+        setFilter((prev) => ({
+          ...prev,
+          sort: undefined,
+          page: 1,
+        }));
+        setCurPage(1);
+        return;
+      }
 
-    setCurPage(newPage);
+      const colName = theSorter.field.toString();
 
-    setFilter((prev) => ({
-      ...prev,
-      pageSize: size,
-      page: newPage,
-    }));
-  };
+      if (!theSorter.order) {
+        setFilter((prev) => ({
+          ...prev,
+          sort: undefined,
+          page: 1,
+        }));
+        setCurPage(1);
+        return;
+      }
+      const sortDir = theSorter.order === "ascend" ? "asc" : "desc";
 
-  const handleSort = (
-    _: TablePaginationConfig,
-    _filters: Record<string, unknown>,
-    sorter: SorterResult<Item> | SorterResult<Item>[]
-  ) => {
-    if (!sorter || (Array.isArray(sorter) && sorter.length === 0)) {
       setFilter((prev) => ({
         ...prev,
-        sort: undefined,
+        sort: {
+          field: colName as keyof Item,
+          direction: sortDir,
+        },
         page: 1,
       }));
       setCurPage(1);
-      return;
-    }
+    },
+    [setFilter]
+  );
 
-    const theSorter = !Array.isArray(sorter) ? sorter : sorter[0];
-
-    if (!theSorter.field) {
+  const handleCategoryChange = useCallback(
+    (value: number | undefined) => {
       setFilter((prev) => ({
         ...prev,
-        sort: undefined,
+        categoryId: value,
         page: 1,
       }));
       setCurPage(1);
-      return;
-    }
+    },
+    [setFilter]
+  );
 
-    const colName = theSorter.field.toString();
-
-    if (!theSorter.order) {
-      setFilter((prev) => ({
-        ...prev,
-        sort: undefined,
-        page: 1,
-      }));
-      setCurPage(1);
-      return;
-    }
-    const sortDir = theSorter.order === "ascend" ? "asc" : "desc";
-
+  const resetCategoryFilter = useCallback(() => {
     setFilter((prev) => ({
       ...prev,
-      sort: {
-        field: colName as keyof Item,
-        direction: sortDir,
-      },
-      page: 1,
+      categoryId: undefined,
     }));
-    setCurPage(1);
-  };
+  }, [setFilter]);
 
   const getCatName = (catId: number) => {
     const catIdStr = catId.toString();
@@ -251,8 +313,10 @@ const ItemGrid: React.FC = () => {
   ];
 
   const getTitle = () => {
-    if (catId && cats.length > 0) {
-      const cat = cats.find((c) => c.id.toString() === catId.toString());
+    if (filter.categoryId && cats.length > 0) {
+      const cat = cats.find(
+        (c) => c.id.toString() === filter.categoryId?.toString()
+      );
       return `Products in ${cat ? cat.name : "Category"}`;
     }
     return "All Products";
@@ -280,6 +344,14 @@ const ItemGrid: React.FC = () => {
 
   const styles = getStyles();
 
+  const categoriesWithProducts = cats.filter((cat) => {
+    const catId = typeof cat.id === "string" ? parseInt(cat.id) : cat.id;
+    return (
+      Object.keys(categoryProductCounts).length === 0 ||
+      categoryProductCounts[catId] > 0
+    );
+  });
+
   return (
     <div>
       <div style={styles.container}>
@@ -290,29 +362,40 @@ const ItemGrid: React.FC = () => {
           <Select
             style={styles.dropdown}
             placeholder="Select a category"
-            value={catId}
-            onChange={(value: number | undefined) => {
-              setFilter((prev) => ({
-                ...prev,
-                categoryId: value,
-                page: 1,
-              }));
-              setCurPage(1);
-            }}
+            value={filter.categoryId}
+            onChange={handleCategoryChange}
             allowClear
           >
-            {cats.map((cat) => {
+            {categoriesWithProducts.map((cat) => {
               const catIdValue =
                 typeof cat.id === "string" ? parseInt(cat.id) : cat.id;
+              const count = categoryProductCounts[catIdValue] || 0;
               return (
                 <Option key={cat.id} value={catIdValue}>
-                  {cat.name}
+                  {cat.name} ({count} products)
                 </Option>
               );
             })}
           </Select>
         </Space>
       </div>
+
+      {hasNoProducts && filter.categoryId !== undefined && (
+        <Alert
+          message="No Products Found"
+          description={`There are no products in the selected category: ${getCatName(
+            filter.categoryId
+          )}.`}
+          type="info"
+          showIcon
+          style={{ marginBottom: 16 }}
+          action={
+            <Button type="primary" size="small" onClick={resetCategoryFilter}>
+              Show All Products
+            </Button>
+          }
+        />
+      )}
 
       <div style={{ marginBottom: 16 }}>
         <Space>
@@ -332,14 +415,18 @@ const ItemGrid: React.FC = () => {
         </Space>
       </div>
 
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={items}
-        loading={loading}
-        pagination={false}
-        onChange={handleSort}
-      />
+      {hasNoProducts ? (
+        <Empty description="No products found in this category" />
+      ) : (
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={items}
+          loading={loading}
+          pagination={false}
+          onChange={handleSort}
+        />
+      )}
 
       <div
         style={{
@@ -354,9 +441,9 @@ const ItemGrid: React.FC = () => {
           pageSize={filter.pageSize}
           showSizeChanger
           pageSizeOptions={["5", "10", "20", "50"]}
-          onChange={changePage}
-          onShowSizeChange={changePageSize}
-          showTotal={(ttl) => `Total ${ttl} items`}
+          onChange={handlePaginationChange}
+          onShowSizeChange={handlePaginationChange}
+          showTotal={(total) => `Total ${total} items`}
         />
       </div>
     </div>

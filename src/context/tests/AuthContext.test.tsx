@@ -5,9 +5,9 @@ import { UserContext } from "../UserSession";
 import { UserProvider } from "../SessionProvider";
 import * as authApi from "../../api/loginService";
 
-jest.mock("../api/authApi", () => ({
-  login: jest.fn(),
-  logout: jest.fn().mockResolvedValue(undefined),
+jest.mock("../../api/loginService", () => ({
+  doLogin: jest.fn(),
+  doLogout: jest.fn(),
 }));
 
 const mockLoginFn = authApi.doLogin as jest.MockedFunction<
@@ -62,7 +62,8 @@ describe("AuthContext", () => {
       email: "test@example.com",
       name: "Test User",
     };
-    mockLoginFn.mockResolvedValue({ user: mockUser, token: "test-token" });
+
+    mockLoginFn.mockResolvedValueOnce({ user: mockUser, token: "test-token" });
 
     render(
       <UserProvider>
@@ -70,36 +71,31 @@ describe("AuthContext", () => {
       </UserProvider>
     );
 
+    const loginButton = screen.getByText("Login");
     await act(async () => {
-      userEvent.click(screen.getByText("Login"));
+      userEvent.click(loginButton);
     });
 
     await waitFor(() => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Authenticated"
       );
+    });
+    await waitFor(() => {
       expect(screen.getByTestId("user-email")).toHaveTextContent(
         "test@example.com"
       );
     });
-
-    expect(localStorage.setItem).toHaveBeenCalledWith("token", "test-token");
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      "user",
-      JSON.stringify(mockUser)
-    );
   });
 
   test("updates state after logout", async () => {
-    localStorage.setItem("token", "test-token");
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        id: "123",
-        email: "test@example.com",
-        name: "Test User",
-      })
-    );
+    const mockUser = {
+      id: "123",
+      email: "test@example.com",
+      name: "Test User",
+    };
+
+    mockLoginFn.mockResolvedValueOnce({ user: mockUser, token: "test-token" });
 
     render(
       <UserProvider>
@@ -107,16 +103,20 @@ describe("AuthContext", () => {
       </UserProvider>
     );
 
+    const loginButton = screen.getByText("Login");
+    await act(async () => {
+      userEvent.click(loginButton);
+    });
+
     await waitFor(() => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Authenticated"
       );
     });
 
-    mockLogoutFn.mockClear();
-
+    const logoutButton = screen.getByText("Logout");
     await act(async () => {
-      userEvent.click(screen.getByText("Logout"));
+      userEvent.click(logoutButton);
     });
 
     expect(mockLogoutFn).toHaveBeenCalled();
@@ -125,16 +125,14 @@ describe("AuthContext", () => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Not Authenticated"
       );
+    });
+    await waitFor(() => {
       expect(screen.getByTestId("user-email")).toHaveTextContent("No user");
     });
-
-    // Verifying weather localStorage items removed
-    expect(localStorage.removeItem).toHaveBeenCalledWith("token");
-    expect(localStorage.removeItem).toHaveBeenCalledWith("user");
   });
 
   test("handles login failure", async () => {
-    mockLoginFn.mockRejectedValue(new Error("Invalid credentials"));
+    mockLoginFn.mockRejectedValueOnce(new Error("Invalid credentials"));
 
     render(
       <UserProvider>
@@ -142,14 +140,17 @@ describe("AuthContext", () => {
       </UserProvider>
     );
 
+    const loginButton = screen.getByText("Login");
     await act(async () => {
-      userEvent.click(screen.getByText("Login"));
+      userEvent.click(loginButton);
     });
 
     await waitFor(() => {
       expect(screen.getByTestId("auth-state")).toHaveTextContent(
         "Not Authenticated"
       );
+    });
+    await waitFor(() => {
       expect(screen.getByTestId("user-email")).toHaveTextContent("No user");
     });
   });

@@ -1,11 +1,6 @@
 import React from "react";
-import { Layout, Button, Typography, Space, Dropdown, Avatar } from "antd";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { Layout, Typography, Space, Dropdown, Avatar } from "antd";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useUser } from "../../hooks/useUser";
 import type { MenuProps } from "antd";
 
@@ -17,7 +12,7 @@ interface TopBarProps {
   setCollapsed: (collapsed: boolean) => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ collapsed, setCollapsed }) => {
+const TopBar: React.FC<TopBarProps> = () => {
   const { state, logout } = useUser();
 
   const userMenuItems: MenuProps["items"] = [
@@ -36,17 +31,10 @@ const TopBar: React.FC<TopBarProps> = ({ collapsed, setCollapsed }) => {
         background: "#fff",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         boxShadow: "0 1px 4px rgba(0,21,41,.08)",
       }}
     >
-      <Button
-        type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={() => setCollapsed(!collapsed)}
-        style={{ fontSize: "16px", width: 64, height: 64 }}
-      />
-
       <Space>
         {state.user && (
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">

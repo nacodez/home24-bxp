@@ -1,9 +1,11 @@
 import React from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Button } from "antd";
 import {
   AppstoreOutlined,
   ShoppingOutlined,
   DashboardOutlined,
+  LeftOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCategories } from "../../hooks/useCategories";
@@ -16,13 +18,14 @@ type MenuItemType = Required<MenuProps>["items"][number];
 
 interface NavMenuProps {
   collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
 }
 
 interface CategoryWithChildren extends Category {
   children: CategoryWithChildren[];
 }
 
-const NavMenu: React.FC<NavMenuProps> = ({ collapsed }) => {
+const NavMenu: React.FC<NavMenuProps> = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { catTree, loading } = useCategories();
@@ -137,24 +140,39 @@ const NavMenu: React.FC<NavMenuProps> = ({ collapsed }) => {
     >
       <div
         style={{
-          height: 64,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          background: "rgba(255, 255, 255, 0.2)",
-          margin: 16,
-          borderRadius: 4,
+          justifyContent: "space-between",
+          padding: "0 16px",
+          height: 64,
+          background: "rgba(255, 255, 255, 0.1)",
+          margin: "16px 0",
         }}
       >
         <h1
           style={{
             color: "#fff",
             margin: 0,
-            fontSize: collapsed ? 16 : 24,
+            fontSize: 20,
+            flex: 1,
+            textAlign: "center",
+            transition: "transform 0.3s",
           }}
         >
           {collapsed ? "H24" : "Home24 BXP"}
         </h1>
+        <Button
+          type="text"
+          icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+            border: "none",
+            background: "transparent",
+            transition: "all 0.3s",
+          }}
+        />
       </div>
 
       <Menu
